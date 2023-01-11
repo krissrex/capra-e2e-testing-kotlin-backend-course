@@ -26,7 +26,7 @@ class HealthApiTest {
         buildInfo = HealthBuildInfo(
           timestamp = Instant.now(),
           commit = "Initial commit",
-          branch = "test",
+          branch = "master",
           number = 123,
         ),
       ),

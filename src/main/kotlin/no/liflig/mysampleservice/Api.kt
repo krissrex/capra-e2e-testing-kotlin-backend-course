@@ -16,7 +16,7 @@ import no.liflig.mysampleservice.common.auth.ExamplePrincipal
 import no.liflig.mysampleservice.common.auth.ExamplePrincipalLog
 import no.liflig.mysampleservice.common.auth.toLog
 import no.liflig.mysampleservice.common.config.Config
-import no.liflig.mysampleservice.subdomain.api.ExampleAggregateEndpoints
+import no.liflig.mysampleservice.drinkmenu.api.DrinkMenuEnpoints
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.contract
 import org.http4k.contract.div
@@ -64,7 +64,7 @@ fun api(config: Config, errorResponseRenderer: ErrorResponseRendererWithLogging)
     descriptionPath = "/api-docs"
     descriptionSecurity = BasicAuthSecurity("master", config.openapiCredentials)
 
-    routes += ExampleAggregateEndpoints().routes
+    routes += DrinkMenuEnpoints().routes
   }
 }
 

@@ -1,19 +1,15 @@
 # Course Material for End-to-End Testing a Kotlin Backend
 
-<!-- 
-Using this README template:
-Replace any text <inside tags> with something that suits your project.
-Remove any sections that do not fit.
-Remove or modify the Badges with the correct links and artifact urls.
-Update any visible text or links to Confluence etc. with your details.
-Write the appropriate dependencies and steps for getting started.
--->
-
 ![Java Badge](https://img.shields.io/badge/java-17-blue?logo=java)
 ![Kotlin Badge](https://img.shields.io/badge/kotlin--blue?logo=kotlin)
 
-Responsible for &lt;transforming source data into a domain model, persisting the data, publish updates to SNS topic for
-subscribers and providing APIs for lookup of these entities.>
+**Example case:** Bartender Server. 🍻
+
+Responsible for: 
+1. Providing a menu of drinks on a REST API,
+2. Collecting incoming orders from a message queue,
+3. Persisting orders in a database for bookkeeping,
+4. Sending events to a topic when an order is ready.
 
 ## Documentation
 
@@ -21,11 +17,9 @@ More information is found here:
 
 - [Slideshow](https://docs.google.com/presentation/d/1t3tc1KePlF6EUdAyNJj3eaHl6DipFOLNx-kdugog6j0/edit?usp=sharing) (Google docs)
 
-## Contributing
+## Getting started
 
-### Getting started
-
-#### Tool dependencies
+### Tool dependencies
 
 You need to install:
 
@@ -34,9 +28,9 @@ You need to install:
 - JDK 17
     - `brew tap homebrew/cask-versions` and then`brew install --cask temurin17`
 
-#### Developer machine setup
+### Developer machine setup
 
-##### GitHub Packages
+#### GitHub Packages
 
 Create a personal access token (classic) with at least `packages:read` scope:
 https://github.com/settings/tokens/new?scopes=packages:read .
@@ -61,7 +55,7 @@ Add a token to maven ( `~/.m2/settings.xml` ) for GitHub Packages:
 </settings>
 ```
 
-##### Git Clone
+#### Git Clone
 
 ```shell
 git clone git@github.com:krissrex/capra-e2e-testing-kotlin-backend-course.git
@@ -71,7 +65,13 @@ git clone git@github.com:krissrex/capra-e2e-testing-kotlin-backend-course.git
 
 Choose _"Import project from external model"_ and select `Maven`.
 
-### Running the application
+## Running the application
+
+Start [Main.kt](src/main/kotlin/no/liflig/mysampleservice/Main.kt).
+
+It needs a Postgres database, an SQS message queue, and an SNS pub/sub topic.
+
+### Building a dockerfile (optional)
 
 1. Build the jar: `mvn package`
 2. Copy the jar from `target/app.jar` to `/docker/app.jar`.
@@ -86,7 +86,7 @@ Choose _"Import project from external model"_ and select `Maven`.
 
 You can test the API with [src/test/http/health.http](src/test/http/health.http)
 
-### Running tests
+## Running tests
 
 ```shell
 mvn verify
@@ -95,7 +95,7 @@ mvn verify
 Add `-DskipTests` to `mvn` to disable all tests.  
 Add `-DskipITs` to only disable integration tests.
 
-### Linting
+## Linting
 
 Only lint: `mvn ktlint:check`  
 

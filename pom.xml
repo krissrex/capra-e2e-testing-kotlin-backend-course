@@ -27,6 +27,7 @@
     <kotlin-logging.version>3.0.4</kotlin-logging.version>
     <slf4j.version>2.0.6</slf4j.version>
     <logback-classic.version>1.4.5</logback-classic.version>
+    <aws-sdk.version>2.19.14</aws-sdk.version>
 
     <mockk.version>1.13.1</mockk.version>
     <assertj-core.version>3.24.1</assertj-core.version>
@@ -67,6 +68,18 @@
   </dependencyManagement>
 
   <dependencies>
+
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sns</artifactId>
+      <version>${aws-sdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sqs</artifactId>
+      <version>${aws-sdk.version}</version>
+    </dependency>
+
 
     <!--        Liflig          -->
     <dependency>

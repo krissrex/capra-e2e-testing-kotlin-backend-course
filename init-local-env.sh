@@ -18,6 +18,9 @@ build.number=0
 cors.allow.origin=*
 cors.allow.headers=origin,content-type,accept,authorization,x-request-id
 cors.allow.methods=GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD
+
+orderQueue.enabled=false
+aws.localstack.enabled=true
 TEMPLATE
   )>>overrides.properties
   changed=1
