@@ -1,8 +1,8 @@
 #!/bin/bash
 
 JAR_NAME="app"
-SERVICE_NAME="<Service>"
-SERVICE_NAMESPACE="<customer-or-service-namespace>"
+SERVICE_NAME="my-sample-service"
+SERVICE_NAMESPACE="capra"
 GIT_COMMIT_HASH="$(git rev-parse HEAD)"
 
 set -e

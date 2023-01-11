@@ -4,7 +4,7 @@
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-    <file>log.json</file>
+    <file>log.ndjson</file>
     <append>false</append>
   </appender>
 
@@ -15,7 +15,7 @@
   </appender>
 
   <logger name="org.eclipse.jetty" level="WARN"/>
-  <logger name="no.fno" level="DEBUG"/>
+  <logger name="no.liflig" level="DEBUG"/>
 
   <root level="INFO">
     <appender-ref ref="STDOUT"/>

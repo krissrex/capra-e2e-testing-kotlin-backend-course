@@ -1,11 +1,12 @@
 package no.liflig.baseline.api
 
-import no.liflig.baseline.createApp
-import no.liflig.baseline.support.auth.DummyAuthService
-import no.liflig.baseline.support.config.Config
+import no.liflig.baseline.common.auth.DummyAuthService
+import no.liflig.baseline.common.config.Config
+import no.liflig.baseline.createApi
 import no.liflig.http4k.health.HealthBuildInfo
 import no.liflig.http4k.health.HealthService
 import org.http4k.core.Method
+import org.http4k.core.Request
 import org.http4k.core.Status
 import org.http4k.kotest.shouldHaveStatus
 import org.junit.jupiter.api.Test
@@ -16,9 +17,9 @@ class HealthApiTest {
   @Test
   internal fun `health should respond 200 ok`() {
     // Given
-    val router = createApp(
+    val router = createApi(
       logHandler = { },
-      policy = Config.load(),
+      config = Config.load(),
       authService = DummyAuthService,
       healthService = HealthService(
         name = "Test-app",
@@ -32,7 +33,7 @@ class HealthApiTest {
     )
 
     // When
-    val actual = router(org.http4k.core.Request(Method.GET, "/health"))
+    val actual = router(Request(Method.GET, "/health"))
 
     // Then
     actual shouldHaveStatus Status.OK

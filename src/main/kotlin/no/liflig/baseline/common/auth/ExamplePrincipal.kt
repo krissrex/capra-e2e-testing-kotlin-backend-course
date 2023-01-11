@@ -1,4 +1,4 @@
-package no.liflig.baseline.support.auth
+package no.liflig.baseline.common.auth
 
 import kotlinx.serialization.Serializable
 import no.liflig.logging.PrincipalLog

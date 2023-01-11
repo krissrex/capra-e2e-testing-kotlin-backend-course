@@ -1,25 +1,4 @@
-# Liflig REST baseline - WIP
-
-Replace any sample values inside `< >` in these files:
-
-- README.md
-- template_Jenkinsfile, and rename to Jenkinsfile
-- [docker/test-docker.sh](docker/test-docker.sh)
-- [pom.xml](pom.xml): `<groupId>` `<artifactId>` and `<name>`
-- [src/main/resources/logback-container.xml](src/main/resources/logback-container.xml) `<logger name="no.liflig" level="DEBUG"/>`
-- [src/main/kotlin/no/liflig/baseline/support/config/Config.kt](src/main/kotlin/no/liflig/baseline/support/config/Config.kt)
-- [src/main/kotlin/no/liflig/baseline/support/observability/OpenTelemetryConfig.kt](src/main/kotlin/no/liflig/baseline/support/observability/OpenTelemetryConfig.kt)
-- [src/main/resources-filtered/application.properties](src/main/resources-filtered/application.properties) `service.name`
-
-You might have success with this script: https://gist.github.com/stekern/23e4804c0801520b50c0c3e5b3822138
-to replace placeholders.
-
-Refactor the package name to suit your needs.  
-Then update the [pom.xml](pom.xml)'s package for `MainKt` (twice: in `maven-exec-plugin` and `maven-shade-plugin`)
-
----
-
-# \<Title of the Project>
+# Course Material for End-to-End Testing a Kotlin Backend
 
 <!-- 
 Using this README template:
@@ -30,36 +9,19 @@ Update any visible text or links to Confluence etc. with your details.
 Write the appropriate dependencies and steps for getting started.
 -->
 
-<!-- Keep/add/modify the badges you want -->
 ![Java Badge](https://img.shields.io/badge/java-17-blue?logo=java)
 ![Kotlin Badge](https://img.shields.io/badge/kotlin--blue?logo=kotlin)
-[![Build Status](https://jenkins.capra.tv/buildStatus/icon?style=flat&job=<customer>%2F<repo-name>%2Fmaster)](https://jenkins.capra.tv/job/<customer>/job/<repo-name>/job/master/)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=capralifecycle_<repo-name>&metric=sqale_index&token=c4c5c941805bfa8cd296947dd001e37c853e4e86)](https://sonarcloud.io/summary/new_code?id=capralifecycle_<repo-name>)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=capralifecycle_<repo-name>&metric=code_smells&token=c4c5c941805bfa8cd296947dd001e37c853e4e86)](https://sonarcloud.io/summary/new_code?id=capralifecycle_<repo-name>)
-
-<!-- Pick a badge that matches how you release your application/lib -->
-[![Docker Badge](https://img.shields.io/docker/v/azul/zulu-openjdk-alpine/17-jre-headless)](https://hub.docker.com/layers/azul/zulu-openjdk-alpine/17-jre-headless/images/sha256-fc9db671e88f11569c49f0665506a460a576340d480e5604779a1c404890603d?context=explore)
-[![Central Repository](https://img.shields.io/maven-central/v/no.capraconsulting/siren-util?label=release)](https://search.maven.org/search?q=g:no.capraconsulting%20AND%20a:siren-util)
-[![NPM Badge](https://img.shields.io/npm/v/@liflig/cdk)](https://www.npmjs.com/package/@liflig/cdk)
-<!-- Note: Liflig Nexus does not allow public read of versions. No badge for this. -->
 
 Responsible for &lt;transforming source data into a domain model, persisting the data, publish updates to SNS topic for
 subscribers and providing APIs for lookup of these entities.>
 
 ## Documentation
 
-<!-- Optional links to other pages -->
 More information is found here:
 
-<!-- Add links that suits your project. These are just exammples: -->
-
-- [Main confluence page](https://confluence.capraconsulting.no/display/<Customer>/<Service>)
-- [API Docs]()
-- [Javadocs]()
+- [Slideshow](https://docs.google.com/presentation/d/1t3tc1KePlF6EUdAyNJj3eaHl6DipFOLNx-kdugog6j0/edit?usp=sharing) (Google docs)
 
 ## Contributing
-
-<!-- If this section gets long, you can use a CONTRIBUTING.md file and link to it here instead. -->
 
 ### Getting started
 
@@ -68,21 +30,46 @@ More information is found here:
 You need to install:
 
 - Docker
-- docker-compose
 - Maven (or run maven through IntelliJ)
 - JDK 17
     - `brew tap homebrew/cask-versions` and then`brew install --cask temurin17`
 
 #### Developer machine setup
 
-0. [Authenticate to Capra's Nexus](https://confluence.capraconsulting.no/display/TNG/Liflig+Nexus) for internal maven
-   repos (`capra-releases`, `<customer>-releases`, `<customer>-snapshots`).
-1. Create an `overrides.properties` by running
-    ```shell
-    ./init-local-env.sh
-    ```
-3. Configure IntelliJ with KtLint: `ktlint applyToIDEAProject`
-    - `brew install ktlint` if you need the CLI.
+##### GitHub Packages
+
+Create a personal access token (classic) with at least `packages:read` scope:
+https://github.com/settings/tokens/new?scopes=packages:read .
+Copy the generated token.
+
+Add a token to maven ( `~/.m2/settings.xml` ) for GitHub Packages:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  
+  <servers>
+      <server>
+        <id>github</id>
+        <username>my-username-on-github</username>
+        <password>123_abc-my-secret-token-here</password>
+      </server>
+  </servers>
+
+</settings>
+```
+
+##### Git Clone
+
+```shell
+git clone git@github.com:krissrex/capra-e2e-testing-kotlin-backend-course.git
+```
+
+**IntelliJ** → `File` → `New` → `Project from existing sources...` → `capra-e2e-testing-kotlin-backend-course`.
+
+Choose _"Import project from external model"_ and select `Maven`.
 
 ### Running the application
 
@@ -116,26 +103,7 @@ Only lint: `mvn ktlint:check`
 
 Fix: `mvn ktlint:format`
 
-### Deploying
-
-Push the master branch.  
-You can track the progress in [Jenkins](https://jenkins.capra.tv/job/<customer>/job/<REPO-NAME>/job/master)
-and in
-the [AWS CodePipeline](https://eu-west-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/<CUSTOMER>-apps-prod/view?region=eu-west-1) (`<customer>-build-admin`)
-.
-
-## Open Telemetry
-
-You can disable the java agent in ECS by setting the environment parameter `OTEL_JAVAAGENT_ENABLED` to `false`.
-
-You can collect data by attaching a sidecar in ECS with the AWS Distro of Otel Collector: https://aws-otel.github.io/docs/setup/ecs.
-
 ## License
-
-&lt;Private project. No reuse.>
-<!-- Or -->
-Apache 2.0, see [LICENSE](./LICENSE).
-<!-- Or this, where you update year, and perhaps add any customer that wanted this proejct to Copyright holder -->
 
 ```text
 Copyright 2022 Liflig By Capra AS

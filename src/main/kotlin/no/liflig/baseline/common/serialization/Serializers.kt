@@ -1,4 +1,4 @@
-package no.liflig.baseline.support.serialization
+package no.liflig.baseline.common.serialization
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

@@ -1,17 +1,17 @@
-package no.liflig.baseline.support.config
+package no.liflig.baseline.common.config
 
-import no.liflig.baseline.support.health.getHealthBuildInfo
+import no.liflig.baseline.common.health.getHealthBuildInfo
 import no.liflig.properties.intRequired
 import no.liflig.properties.loadProperties
 import no.liflig.properties.string
 import no.liflig.properties.stringNotEmpty
+import no.liflig.properties.stringNotNull
 import org.http4k.core.Credentials
 import java.util.Properties
 
 class Config private constructor(val properties: Properties) {
 
-  // Change these
-  val applicationName = "liflig-rest-baseline"
+  val applicationName = properties.stringNotNull("service.name")
 
   val corsPolicy = CorsConfig.from(properties)
   val serverPort = properties.intRequired("server.port")

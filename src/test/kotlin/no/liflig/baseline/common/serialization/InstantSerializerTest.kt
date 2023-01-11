@@ -1,4 +1,4 @@
-package no.liflig.baseline.support.serialization
+package no.liflig.baseline.common.serialization
 
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat

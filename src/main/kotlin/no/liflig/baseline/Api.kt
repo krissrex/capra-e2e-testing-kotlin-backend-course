@@ -6,8 +6,16 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import mu.KotlinLogging
+import no.liflig.baseline.common.auth.ExamplePrincipal
+import no.liflig.baseline.common.auth.ExamplePrincipalLog
+import no.liflig.baseline.common.auth.toLog
+import no.liflig.baseline.common.config.Config
 import no.liflig.baseline.subdomain.api.ExampleAggregateEndpoints
-import no.liflig.baseline.support.config.Config
+import no.liflig.http4k.AuthService
+import no.liflig.http4k.ServiceRouter
+import no.liflig.http4k.health.HealthService
+import no.liflig.logging.RequestResponseLog
 import no.liflig.logging.http4k.ErrorResponseRendererWithLogging
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.contract
@@ -20,6 +28,8 @@ import org.http4k.contract.openapi.v3.ApiServer
 import org.http4k.contract.openapi.v3.AutoJsonToJsonSchema
 import org.http4k.contract.openapi.v3.OpenApi3
 import org.http4k.contract.security.BasicAuthSecurity
+import org.http4k.core.Response
+import org.http4k.core.Status
 import org.http4k.core.Uri
 import org.http4k.format.ConfigurableJackson
 import org.http4k.format.asConfigurable
@@ -27,23 +37,30 @@ import org.http4k.format.withStandardMappings
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 
+private val logger = KotlinLogging.logger {}
+
+fun createApi(
+  logHandler: (RequestResponseLog<ExamplePrincipalLog>) -> Unit,
+  config: Config,
+  authService: AuthService<ExamplePrincipal>,
+  healthService: HealthService,
+) = ServiceRouter(
+  logHandler,
+  ExamplePrincipal::toLog,
+  config.corsPolicy.asPolicy(),
+  authService,
+  healthService,
+  principalDeviationToResponse = {
+    logger.error(it) { "Error while retrieving principal" }
+    Response(Status.UNAUTHORIZED)
+  },
+).routingHandler {
+  routes += api(config, errorResponseRenderer)
+}
+
 fun api(config: Config, errorResponseRenderer: ErrorResponseRendererWithLogging): RoutingHttpHandler {
   return "api" / "v1" bind contract {
-    val jacksonJson = JacksonJson
-    renderer = OpenApi3(
-      apiInfo = ApiInfo(
-        title = config.applicationName,
-        version = "1",
-        description = "A REST API for my service",
-      ),
-      json = jacksonJson,
-      apiRenderer = ApiRenderer.Auto<Api<JsonNode>, JsonNode>(
-        jacksonJson,
-        schema = AutoJsonToJsonSchema(jacksonJson),
-      ).cached(),
-      errorResponseRenderer = errorResponseRenderer,
-      servers = listOf(ApiServer(Uri.of("http://localhost:${config.serverPort}"))),
-    )
+    renderer = createOpenApiSpec(config, errorResponseRenderer)
     descriptionPath = "/api-docs"
     descriptionSecurity = BasicAuthSecurity("master", config.openapiCredentials)
 
@@ -51,6 +68,35 @@ fun api(config: Config, errorResponseRenderer: ErrorResponseRendererWithLogging)
   }
 }
 
+private fun createOpenApiSpec(
+  config: Config,
+  errorResponseRenderer: ErrorResponseRendererWithLogging,
+) = OpenApi3(
+  apiInfo = ApiInfo(
+    title = config.applicationName,
+    version = "1",
+    description = "A REST API for my service",
+  ),
+  json = JacksonJson,
+  apiRenderer = ApiRenderer.Auto<Api<JsonNode>, JsonNode>(
+    JacksonJson,
+    schema = AutoJsonToJsonSchema(JacksonJson),
+  ).cached(),
+  errorResponseRenderer = errorResponseRenderer,
+  servers = listOf(ApiServer(Uri.of("http://localhost:${config.serverPort}"))),
+)
+
+interface Endpoint {
+  val routes: Collection<ContractRoute>
+}
+
+interface Route {
+  val route: ContractRoute
+}
+
+/**
+ * Used to create JSON for the OpenAPI spec's examples.
+ */
 object JacksonJson : ConfigurableJackson(
   KotlinModule.Builder()
     .withReflectionCacheSize(512)
@@ -73,11 +119,3 @@ object JacksonJson : ConfigurableJackson(
     .configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true)
     .configure(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS, true),
 )
-
-interface Endpoint {
-  val routes: Collection<ContractRoute>
-}
-
-interface Route {
-  val route: ContractRoute
-}

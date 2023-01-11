@@ -1,4 +1,4 @@
-package no.liflig.baseline.support.config
+package no.liflig.baseline.common.config
 
 import no.liflig.properties.stringNotEmpty
 import org.http4k.core.Method

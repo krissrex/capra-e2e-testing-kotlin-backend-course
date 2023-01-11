@@ -1,8 +1,7 @@
 /overrides.properties
 /.idea/
 /target/
-/liflig-rest-baseline.iml
-*log.json
+*log.ndjson
 
 
 
