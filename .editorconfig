@@ -1,0 +1,24 @@
+# Preferably this file is similar in all projects.
+# If you make any additions, please consider contributing to
+# the original one in the baseline https://github.com/capralifecycle/liflig-rest-service-baseline/blob/master/.editorconfig
+
+# http://editorconfig.org
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.kt]
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+max_line_length = 120
+ktlint_disabled_rules=multiline-if-else, filename
+
+[*.md]
+# Markdown uses double trailing whitespaces as special chars to force newlines
+trim_trailing_whitespace = false

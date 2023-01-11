@@ -1,0 +1,144 @@
+#!/usr/bin/env groovy
+
+// See https://github.com/capralifecycle/jenkins-pipeline-library
+@Library("cals") _
+
+def ecrPublish = new no.capraconsulting.buildtools.cdk.EcrPublishV2()
+def pipelines = new no.capraconsulting.buildtools.lifligcdkpipelines.LifligCdkPipelines()
+def utils = new no.capraconsulting.buildtools.Utils()
+
+def artifactsBucketName = "<build-artifacts bucket name>"
+def artifactsRoleArn = "arn:aws:iam::<build artifacts jenkins role>"
+
+def ecrPublishConfig = ecrPublish.config {
+  repositoryUri = "<build account id>.dkr.ecr.eu-west-1.amazonaws.com/<build artifacts ECR repo name>"
+  roleArn = artifactsRoleArn
+}
+
+// The generated fat jar in target/
+def artifactFilename = "app.jar"
+// Used for the docker image name.
+def applicationName = "<customer>-<service>"
+// For the CDK pipeline variable. Must be unique among all apps,
+// and match what is used in aws-infrastructure repo
+// as "dev${serviceName}EcrTag" and "prod${serviceName}EcrTag"
+def serviceName = "<ServiceName>"
+// Path to the folder where Dockerfile builds from
+def dockerContextFolder = "docker"
+// The executable that the Dockerfile tries to copy into the Docker-image and run
+def dockerTargetExecutableFilename = "app.jar"
+def awsDevPipelineName = "<customer>-apps-dev"
+def awsProdPipelineName = "<customer>-apps-prod"
+
+def notificationSlackChannel = "#<customer>-dev-info"
+def sonarcloudKey = "capralifecycle_<repo-name>"
+
+def dockerOtelServiceName = serviceName
+def dockerOtelNamespace = "<customer>"
+
+///// No need to modify below here!
+
+buildConfig(
+  jobProperties: [
+    parameters([
+      booleanParam(
+        defaultValue: false,
+        description: 'Skip branch check - force deploy to DEV',
+        name: 'devOverrideBranchCheck'
+      ),
+      ecrPublish.dockerSkipCacheParam(),
+    ]),
+  ],
+  slack: [channel: notificationSlackChannel],
+) {
+  def ecrTagName
+
+  def triggerDev = env.BRANCH_NAME == "master" || params.devOverrideBranchCheck
+  def triggerProd = env.BRANCH_NAME == "master"
+
+  dockerNode {
+    def commit
+
+    stage("Checkout source") {
+      def gitVars = checkout scm
+      commit = gitVars.GIT_COMMIT
+    }
+
+    insideToolImage("maven:3-jdk-17-debian") {
+      withMavenSettings {
+        withEnv(["GIT_COMMIT=$commit"]) {
+          stage("Dependency analysis") {
+            echo "Checking that no snapshot dependencies are used"
+            sh "mvn -s \$MAVEN_SETTINGS org.apache.maven.plugins:maven-enforcer-plugin:3.0.0-M3:enforce -Drules=requireReleaseDeps"
+          }
+
+          stage('Build and Test project') {
+            sh "mvn -s \$MAVEN_SETTINGS -B verify -U"
+            sh "cp target/${artifactFilename} ${dockerContextFolder}/${dockerTargetExecutableFilename}"
+            stash name: "build", includes: "${dockerContextFolder}/*"
+          }
+
+          insideSonarScanner {
+            analyzeSonarCloudForMaven([
+              'sonar.organization': 'capralifecycle',
+              'sonar.projectKey': sonarcloudKey,
+            ])
+          }
+        }
+      }
+    }
+
+    ecrPublish.withEcrLogin(ecrPublishConfig) {
+      def img
+      stage("Docker build") {
+        unstash "build"
+        def isSameImageAsLast
+        (img, isSameImageAsLast) = ecrPublish.buildImage([
+          config         : ecrPublishConfig,
+          applicationName: applicationName,
+          contextDir     : dockerContextFolder,
+          dockerArgs: "--build-arg service_name=${dockerOtelServiceName} --build-arg service_namespace=${dockerOtelNamespace} --build-arg service_version=${commit} "
+        ])
+        ecrTagName = ecrPublish.generateLongTag(applicationName)
+      }
+
+      stage("Push Docker image") {
+        if (triggerDev || triggerProd) {
+          img.push(ecrTagName)
+        } else {
+          echo "Skipped docker push. Only pushing from master branch or with devOverrideBranchCheck"
+        }
+      }
+    }
+
+    if (triggerDev) {
+      stage("Trigger dev pipeline") {
+        pipelines.configureVariablesAndTrigger(
+          artifactsRoleArn: artifactsRoleArn,
+          artifactsBucketName: artifactsBucketName,
+          pipelineName: awsDevPipelineName,
+          variables: [
+            ("dev${serviceName}EcrTag" as String): ecrTagName,
+          ],
+          variablesVersion: "v2",
+          region: "eu-west-1",
+        )
+      }
+    }
+
+    if (triggerProd) {
+      stage("Trigger prod pipeline") {
+        pipelines.configureVariablesAndTrigger(
+          artifactsRoleArn: artifactsRoleArn,
+          artifactsBucketName: artifactsBucketName,
+          pipelineName: awsProdPipelineName,
+          variables: [
+            ("prod${serviceName}EcrTag" as String): ecrTagName,
+          ],
+          variablesVersion: "v2",
+          region: "eu-west-1",
+        )
+      }
+    }
+  }
+}
