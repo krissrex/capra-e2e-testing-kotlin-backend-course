@@ -81,7 +81,7 @@ Choose _"Import project from external model"_ and select `Maven`.
       ```shell
       docker-compose -f docker-compose.yml up -d --build
       ```
-   - Or run `no.liflig.baseline.Main.main()` 
+   - Or run `no.liflig.mysampleservice.Main.main()` 
    - Or `cd docker && ./test-docker.sh`
 
 You can test the API with [src/test/http/health.http](src/test/http/health.http)

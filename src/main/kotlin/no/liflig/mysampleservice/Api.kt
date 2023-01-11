@@ -1,4 +1,4 @@
-package no.liflig.baseline
+package no.liflig.mysampleservice
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
@@ -7,16 +7,16 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import mu.KotlinLogging
-import no.liflig.baseline.common.auth.ExamplePrincipal
-import no.liflig.baseline.common.auth.ExamplePrincipalLog
-import no.liflig.baseline.common.auth.toLog
-import no.liflig.baseline.common.config.Config
-import no.liflig.baseline.subdomain.api.ExampleAggregateEndpoints
 import no.liflig.http4k.AuthService
 import no.liflig.http4k.ServiceRouter
 import no.liflig.http4k.health.HealthService
 import no.liflig.logging.RequestResponseLog
 import no.liflig.logging.http4k.ErrorResponseRendererWithLogging
+import no.liflig.mysampleservice.common.auth.ExamplePrincipal
+import no.liflig.mysampleservice.common.auth.ExamplePrincipalLog
+import no.liflig.mysampleservice.common.auth.toLog
+import no.liflig.mysampleservice.common.config.Config
+import no.liflig.mysampleservice.subdomain.api.ExampleAggregateEndpoints
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.contract
 import org.http4k.contract.div

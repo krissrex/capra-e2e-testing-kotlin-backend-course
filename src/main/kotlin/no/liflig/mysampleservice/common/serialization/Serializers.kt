@@ -1,4 +1,4 @@
-package no.liflig.baseline.common.serialization
+package no.liflig.mysampleservice.common.serialization
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

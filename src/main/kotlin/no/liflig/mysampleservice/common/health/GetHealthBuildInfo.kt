@@ -1,10 +1,10 @@
 @file:UseSerializers(InstantSerializer::class)
 
-package no.liflig.baseline.common.health
+package no.liflig.mysampleservice.common.health
 
 import kotlinx.serialization.UseSerializers
-import no.liflig.baseline.common.serialization.InstantSerializer
 import no.liflig.http4k.health.HealthBuildInfo
+import no.liflig.mysampleservice.common.serialization.InstantSerializer
 import no.liflig.properties.intRequired
 import no.liflig.properties.stringNotNull
 import java.time.Instant

@@ -1,4 +1,4 @@
-package no.liflig.baseline.common.config
+package no.liflig.mysampleservice.common.config
 
 import no.liflig.properties.intRequired
 import no.liflig.properties.stringNotNull

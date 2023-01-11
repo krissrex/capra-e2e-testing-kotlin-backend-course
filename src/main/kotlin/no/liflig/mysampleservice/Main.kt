@@ -1,13 +1,13 @@
-package no.liflig.baseline
+package no.liflig.mysampleservice
 
 import mu.KotlinLogging
-import no.liflig.baseline.common.auth.DummyAuthService
-import no.liflig.baseline.common.auth.ExamplePrincipal
-import no.liflig.baseline.common.auth.ExamplePrincipalLog
-import no.liflig.baseline.common.config.Config
 import no.liflig.http4k.AuthService
 import no.liflig.http4k.health.createHealthService
 import no.liflig.logging.http4k.LoggingFilter
+import no.liflig.mysampleservice.common.auth.DummyAuthService
+import no.liflig.mysampleservice.common.auth.ExamplePrincipal
+import no.liflig.mysampleservice.common.auth.ExamplePrincipalLog
+import no.liflig.mysampleservice.common.config.Config
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 

@@ -1,4 +1,4 @@
-package no.liflig.baseline.common.serialization
+package no.liflig.mysampleservice.common.serialization
 
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions

@@ -1,6 +1,6 @@
-package no.liflig.baseline.common.config
+package no.liflig.mysampleservice.common.config
 
-import no.liflig.baseline.common.health.getHealthBuildInfo
+import no.liflig.mysampleservice.common.health.getHealthBuildInfo
 import no.liflig.properties.intRequired
 import no.liflig.properties.loadProperties
 import no.liflig.properties.string

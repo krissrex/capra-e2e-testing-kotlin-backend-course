@@ -1,9 +1,9 @@
-package no.liflig.baseline.subdomain.api.routes
+package no.liflig.mysampleservice.subdomain.api.routes
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
-import no.liflig.baseline.JacksonJson.auto
-import no.liflig.baseline.Route
-import no.liflig.baseline.subdomain.domain.ExampleAggregate
+import no.liflig.mysampleservice.JacksonJson.auto
+import no.liflig.mysampleservice.Route
+import no.liflig.mysampleservice.subdomain.domain.ExampleAggregate
 import org.http4k.contract.RouteMetaDsl
 import org.http4k.contract.Tag
 import org.http4k.contract.meta

@@ -1,10 +1,10 @@
-package no.liflig.baseline.api
+package no.liflig.mysampleservice.api
 
-import no.liflig.baseline.common.auth.DummyAuthService
-import no.liflig.baseline.common.config.Config
-import no.liflig.baseline.createApi
 import no.liflig.http4k.health.HealthBuildInfo
 import no.liflig.http4k.health.HealthService
+import no.liflig.mysampleservice.common.auth.DummyAuthService
+import no.liflig.mysampleservice.common.config.Config
+import no.liflig.mysampleservice.createApi
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status

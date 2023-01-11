@@ -1,4 +1,4 @@
-package no.liflig.baseline.common.auth
+package no.liflig.mysampleservice.common.auth
 
 import arrow.core.Either
 import arrow.core.right
