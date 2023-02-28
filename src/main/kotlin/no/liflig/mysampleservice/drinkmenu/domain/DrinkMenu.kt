@@ -32,5 +32,5 @@ data class Drink(
 enum class AgeLimit {
   NONE,
   EIGHTEEN,
-  TWENTY
+  TWENTY,
 }

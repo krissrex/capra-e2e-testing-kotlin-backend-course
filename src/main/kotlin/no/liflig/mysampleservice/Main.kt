@@ -28,6 +28,9 @@ fun main(args: Array<String>) {
     .start()
 }
 
+/**
+ * Responsible for wiring up all dependencies and starting services.
+ */
 class App(private val config: Config) {
   private val logger = KotlinLogging.logger {}
 
@@ -76,7 +79,7 @@ class App(private val config: Config) {
           ),
         ),
       ),
-    ).poll()
+    ).start()
     logger.info {
       "Started queue poller on queue ${config.awsConfig.orderQueueUrl} and" +
         " sending events to ${config.awsConfig.orderNotificationTopicArn}"
