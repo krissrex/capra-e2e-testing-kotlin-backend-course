@@ -10,14 +10,11 @@ if ! [ -f overrides.properties ]; then
   echo "Generating overrides.properties"
 
   (sed 's/^ \+//g' <<TEMPLATE
-server.port=9000
+server.port=8080
 build.timestamp=2007-12-03T10:15:30.00Z
 build.commit=5d974d0
 build.branch=master
 build.number=0
-cors.allow.origin=*
-cors.allow.headers=origin,content-type,accept,authorization,x-request-id
-cors.allow.methods=GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD
 
 orderQueue.enabled=false
 aws.localstack.enabled=true

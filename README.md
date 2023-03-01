@@ -97,6 +97,7 @@ Choose _"Import project from external model"_ and select `Maven`.
 ## Running the application
 
 Start [Main.kt](src/main/kotlin/no/liflig/mysampleservice/Main.kt).
+You should use `./build-and-run.sh`.
 
 It needs a Postgres database, an SQS message queue, and an SNS pub/sub topic.
 
@@ -113,7 +114,7 @@ It needs a Postgres database, an SQS message queue, and an SNS pub/sub topic.
   - Or run `no.liflig.mysampleservice.Main.main()`
   - Or `cd docker && ./test-docker.sh`
 
-You can test the API with [src/test/http/health.http](src/test/http/health.http)
+You can test the API with [src/test/http/menu.http](src/test/http/menu.http)
 
 ## Running tests
 

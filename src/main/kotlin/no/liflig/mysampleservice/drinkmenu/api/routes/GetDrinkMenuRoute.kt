@@ -1,9 +1,9 @@
 package no.liflig.mysampleservice.drinkmenu.api.routes
 
-import no.liflig.mysampleservice.Route
 import no.liflig.mysampleservice.drinkmenu.domain.AgeLimit
 import no.liflig.mysampleservice.drinkmenu.domain.Drink
 import no.liflig.mysampleservice.drinkmenu.domain.DrinkMenu
+import org.http4k.contract.ContractRoute
 import org.http4k.contract.RouteMetaDsl
 import org.http4k.contract.Tag
 import org.http4k.contract.meta
@@ -13,15 +13,9 @@ import org.http4k.core.Status
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization
 
-class GetDrinkMenuRoute(basePath: String) : Route {
-
-  private val menuBody = KotlinxSerialization.autoBody<DrinkMenu>().toLens()
-
-  override val route = basePath meta meta() bindContract Method.GET to { req ->
-    Response(Status.OK).with(menuBody of DrinkMenu.createDefaultMenu())
-  }
-
-  private fun meta(): RouteMetaDsl.() -> Unit = {
+private val menuBody = KotlinxSerialization.autoBody<DrinkMenu>().toLens()
+fun getDrinkMenuRoute(): ContractRoute {
+  fun openApiSpec(): RouteMetaDsl.() -> Unit = {
     summary = "Get the drink menu"
     operationId = "getDrinkMenu"
     description = "Get drink menu with all the available drinks"
@@ -33,4 +27,10 @@ class GetDrinkMenuRoute(basePath: String) : Route {
       description = "The menu with available drinks",
     )
   }
+
+  val route = "/menu" meta openApiSpec() bindContract Method.GET to { req ->
+    Response(Status.OK).with(menuBody of DrinkMenu.createDefaultMenu())
+  }
+
+  return route
 }

@@ -1,12 +1,6 @@
 package no.liflig.mysampleservice
 
 import mu.KotlinLogging
-import no.liflig.http4k.AuthService
-import no.liflig.http4k.health.createHealthService
-import no.liflig.logging.http4k.LoggingFilter
-import no.liflig.mysampleservice.common.auth.DummyAuthService
-import no.liflig.mysampleservice.common.auth.ExamplePrincipal
-import no.liflig.mysampleservice.common.auth.ExamplePrincipalLog
 import no.liflig.mysampleservice.common.config.Config
 import no.liflig.mysampleservice.orders.AgeLimitPolicy
 import no.liflig.mysampleservice.orders.AwsSnsSender
@@ -45,20 +39,7 @@ class App(private val config: Config) {
 
   private fun startRestApi() {
     logger.info { "Starting API" }
-    val healthService = createHealthService(config.applicationName, config.buildInfo)
-    val authService: AuthService<ExamplePrincipal> = DummyAuthService
-    val logHandler = LoggingFilter.createLogHandler(
-      printStacktraceToConsole = true,
-      principalLogSerializer = ExamplePrincipalLog.serializer(),
-    )
-
-    createApi(
-      logHandler,
-      config,
-      authService,
-      healthService,
-    ).asServer(Jetty(config.serverPort))
-      .start()
+    api().asServer(Jetty(config.serverPort)).start()
     logger.info { "Started API on port ${config.serverPort}" }
   }
 

@@ -2,8 +2,8 @@
 
 package no.liflig.mysampleservice.common.health
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import no.liflig.http4k.health.HealthBuildInfo
 import no.liflig.mysampleservice.common.serialization.InstantSerializer
 import no.liflig.properties.intRequired
 import no.liflig.properties.stringNotNull
@@ -14,7 +14,7 @@ import java.util.Properties
 /**
  * Create [HealthBuildInfo] based on build.properties injected by the build.
  */
-fun Properties.getHealthBuildInfo() = HealthBuildInfo(
+fun Properties.getBuildInfo() = BuildInfo(
   timestamp = try {
     Instant.parse(stringNotNull("build.timestamp"))
   } catch (ex: DateTimeParseException) {
@@ -29,4 +29,12 @@ fun Properties.getHealthBuildInfo() = HealthBuildInfo(
   } catch (ex: IllegalArgumentException) {
     0
   },
+)
+
+@Serializable
+data class BuildInfo(
+  val timestamp: Instant,
+  val commit: String,
+  val branch: String,
+  val number: Int,
 )

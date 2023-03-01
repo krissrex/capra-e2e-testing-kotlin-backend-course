@@ -84,20 +84,8 @@
     <!--        Liflig          -->
     <dependency>
       <groupId>no.liflig</groupId>
-      <artifactId>liflig-logging-http4k</artifactId>
-      <version>${liflig-logging-http4k.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>no.liflig</groupId>
       <artifactId>properties</artifactId>
       <version>${liflig-properties.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>no.liflig</groupId>
-      <artifactId>liflig-http4k-utils</artifactId>
-      <version>${liflig-http4k-utils.version}</version>
     </dependency>
 
     <dependency>
@@ -155,6 +143,12 @@
       <artifactId>logback-classic</artifactId>
       <version>${logback-classic.version}</version>
     </dependency>
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>7.2</version>
+    </dependency>
+
 
     <dependency>
       <groupId>org.slf4j</groupId>
