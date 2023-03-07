@@ -96,7 +96,7 @@ Choose _"Import project from external model"_ and select `Maven`.
 
 ## Running the application
 
-Start [Main.kt](src/main/kotlin/no/liflig/mysampleservice/Main.kt).
+Start [Main.kt](src/main/kotlin/no/liflig/bartenderservice/Main.kt).
 You should use `./build-and-run.sh`.
 
 It needs a Postgres database, an SQS message queue, and an SNS pub/sub topic.
@@ -111,7 +111,7 @@ It needs a Postgres database, an SQS message queue, and an SNS pub/sub topic.
      ```shell
      docker-compose -f docker-compose.yml up -d --build
      ```
-  - Or run `no.liflig.mysampleservice.Main.main()`
+  - Or run `no.liflig.bartenderservice.Main.main()`
   - Or `cd docker && ./test-docker.sh`
 
 You can test the API with [src/test/http/menu.http](src/test/http/menu.http)
