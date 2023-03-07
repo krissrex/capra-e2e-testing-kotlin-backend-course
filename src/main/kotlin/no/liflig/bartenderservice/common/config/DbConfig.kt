@@ -1,21 +1,22 @@
 package no.liflig.bartenderservice.common.config
 
+import java.util.Properties
 import no.liflig.properties.intRequired
 import no.liflig.properties.stringNotNull
-import java.util.Properties
 
 data class DbConfig(
-  val username: String,
-  val password: String,
-  val dbname: String,
-  private val port: Int,
-  private val hostname: String,
-  val jdbcUrl: String = "jdbc:postgresql://$hostname:$port/$dbname",
+    val username: String,
+    val password: String,
+    val dbname: String,
+    private val port: Int,
+    private val hostname: String,
+    val jdbcUrl: String = "jdbc:postgresql://$hostname:$port/$dbname",
 ) {
 
   companion object {
     /**
-     * Reads in database values that are set from an AWS Secrets Manager json and placed into a properties file.
+     * Reads in database values that are set from an AWS Secrets Manager json and placed into a
+     * properties file.
      */
     fun create(properties: Properties): DbConfig {
       // The properties keys must match the json in AWS Secrets Manager for ProductDatabaseSecret

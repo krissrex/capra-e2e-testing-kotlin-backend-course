@@ -1,9 +1,9 @@
 package no.liflig.bartenderservice.common.serialization
 
+import java.time.Instant
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.time.Instant
 
 internal class InstantSerializerTest {
 

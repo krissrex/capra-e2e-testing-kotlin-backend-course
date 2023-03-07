@@ -7,8 +7,8 @@ interface SnsSender {
 }
 
 class AwsSnsSender(
-  private val topicArn: String,
-  private val snsClient: SnsClient,
+    private val topicArn: String,
+    private val snsClient: SnsClient,
 ) : SnsSender {
   override fun send(message: String) {
     snsClient.publish { req ->

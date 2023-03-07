@@ -14,6 +14,7 @@ import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization
 
 private val menuBody = KotlinxSerialization.autoBody<DrinkMenu>().toLens()
+
 fun getDrinkMenuRoute(): ContractRoute {
   fun openApiSpec(): RouteMetaDsl.() -> Unit = {
     summary = "Get the drink menu"
@@ -22,15 +23,19 @@ fun getDrinkMenuRoute(): ContractRoute {
     tags += Tag("drink")
 
     returning(
-      Status.OK,
-      menuBody to DrinkMenu(listOf(Drink("1", "Eksempel-pils", "69", "0.5", AgeLimit.EIGHTEEN))),
-      description = "The menu with available drinks",
+        Status.OK,
+        menuBody to DrinkMenu(listOf(Drink("1", "Eksempel-pils", "69", "0.5", AgeLimit.EIGHTEEN))),
+        description = "The menu with available drinks",
     )
   }
 
-  val route = "/menu" meta openApiSpec() bindContract Method.GET to { req ->
-    Response(Status.OK).with(menuBody of DrinkMenu.createDefaultMenu())
-  }
+  val route =
+      "/menu" meta
+          openApiSpec() bindContract
+          Method.GET to
+          { req ->
+            Response(Status.OK).with(menuBody of DrinkMenu.createDefaultMenu())
+          }
 
   return route
 }

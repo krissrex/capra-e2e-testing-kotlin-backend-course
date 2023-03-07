@@ -1,11 +1,11 @@
 package no.liflig.bartenderservice.common.config
 
+import java.util.Properties
 import no.liflig.bartenderservice.common.health.getBuildInfo
 import no.liflig.properties.boolean
 import no.liflig.properties.intRequired
 import no.liflig.properties.loadProperties
 import no.liflig.properties.stringNotNull
-import java.util.Properties
 
 class Config private constructor(val properties: Properties) {
 

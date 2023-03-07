@@ -20,7 +20,5 @@ private val requestLogging = Filter { next: HttpHandler ->
 }
 
 fun api(): RoutingHttpHandler {
-  return "api" / "v1" bind contract {
-    routes += getDrinkMenuRoute()
-  }.withFilter(requestLogging)
+  return "api" / "v1" bind contract { routes += getDrinkMenuRoute() }.withFilter(requestLogging)
 }

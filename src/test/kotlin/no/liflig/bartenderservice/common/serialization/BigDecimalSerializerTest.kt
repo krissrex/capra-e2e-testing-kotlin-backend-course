@@ -1,9 +1,9 @@
 package no.liflig.bartenderservice.common.serialization
 
+import java.math.BigDecimal
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
 
 internal class BigDecimalSerializerTest {
   @Test

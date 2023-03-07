@@ -122,7 +122,7 @@ You can test the API with [src/test/http/menu.http](src/test/http/menu.http)
 mvn verify
 ```
 
-Add `-DskipTests` to `mvn` to disable all tests.  
+Add `-DskipTests` to `mvn` to disable all tests.
 Add `-DskipITs` to only disable integration tests.
 
 ## Linting
@@ -150,4 +150,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
