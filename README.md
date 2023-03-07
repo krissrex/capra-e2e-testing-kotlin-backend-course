@@ -58,32 +58,6 @@ You need to install:
 
 ### Developer machine setup
 
-#### GitHub Packages
-
-Create a personal access token (classic) with at least `packages:read` scope:
-https://github.com/settings/tokens/new?scopes=packages:read .
-Copy the generated token.
-
-Add a token to maven ( `~/.m2/settings.xml` ) for GitHub Packages:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                      https://maven.apache.org/xsd/settings-1.0.0.xsd">
-
-  <servers>
-    <server>
-      <id>github</id>
-      <username>my-username-on-github</username>
-      <password>123_abc-my-secret-token-here</password>
-    </server>
-  </servers>
-
-</settings>
-```
-
 #### Git Clone
 
 ```shell
@@ -96,23 +70,28 @@ Choose _"Import project from external model"_ and select `Maven`.
 
 ## Running the application
 
-Start [Main.kt](src/main/kotlin/no/liflig/bartenderservice/Main.kt).
-You should use `./build-and-run.sh`.
+Run `./init-local-env.sh` once to create `overrides.properties` to tweak settings.
 
-It needs a Postgres database, an SQS message queue, and an SNS pub/sub topic.
+Start [Main.kt](src/main/kotlin/no/liflig/bartenderservice/Main.kt).
+You should use `./scripts/build.sh`, then `./scripts/run.sh` or `./scripts/run-docker.sh`.
+Or run `no.liflig.bartenderservice.Main.main()` from IntelliJ.
+
+The app needs a Postgres database, an SQS message queue, and an SNS pub/sub topic.
 
 ### Building a dockerfile (optional)
 
 1. Build the jar: `mvn package`
 2. Copy the jar from `target/app.jar` to `/docker/app.jar`.
-  - You can use `cd docker && ./test-docker.sh`.
+
+- You can use `./scripts/build.sh`.
+
 3. Run the app
-  - Start `docker-compose`:
-     ```shell
-     docker-compose -f docker-compose.yml up -d --build
-     ```
-  - Or run `no.liflig.bartenderservice.Main.main()`
-  - Or `cd docker && ./test-docker.sh`
+
+- Start `docker-compose`:
+   ```shell
+   docker-compose -f docker-compose.yml up -d
+   ```
+- Or `./scripts/run-docker.sh`
 
 You can test the API with [src/test/http/menu.http](src/test/http/menu.http)
 

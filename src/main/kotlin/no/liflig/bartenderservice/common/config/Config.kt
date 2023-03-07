@@ -22,7 +22,7 @@ data class Config(
     private fun env(): Environment =
         Environment.ENV overrides
             Environment.JVM_PROPERTIES overrides
-            Environment.from(File("overrides.properties")) overrides
+            Environment.fromFileIfExist(File("overrides.properties")) overrides
             Environment.fromResource("application.properties")
 
     fun load() =
@@ -42,3 +42,11 @@ data class Config(
 private val appName = EnvironmentKey.string().required("service.name")
 private val port = EnvironmentKey.int().defaulted("server.port", 8080)
 private val queuePollerEnabled = EnvironmentKey.boolean().defaulted("orderQueue.enabled", true)
+
+private fun Environment.Companion.fromFileIfExist(file: File): Environment {
+  return if (file.exists() && file.isFile) {
+    Environment.from(file)
+  } else {
+    Environment.EMPTY
+  }
+}

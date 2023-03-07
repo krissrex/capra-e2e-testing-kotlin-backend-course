@@ -1,7 +1,8 @@
 /overrides.properties
 /target/
 *log.ndjson
-
+# localstack docker-compose
+volume
 
 
 
