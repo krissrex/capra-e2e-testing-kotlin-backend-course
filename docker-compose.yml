@@ -14,9 +14,14 @@ services:
       - aws.localstack.enabled=true
       - aws.localstack.sqs.endpointOverride=http://localstack:4566
       - aws.localstack.sns.endpointOverride=http://localstack:4566
+      - orderQueue.sqs.url=http://localstack:4566/000000000000/orders-queue
     depends_on:
-      - db
-      - localstack
+      db:
+        condition: service_started
+      localstack:
+        condition: service_healthy
+      create-resources:
+        condition: service_completed_successfully
   db:
     image: postgres:14
     ports:
@@ -32,6 +37,20 @@ services:
       - "127.0.0.1:4510-4559:4510-4559"  # external services port range
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEBUG=0
     volumes:
       - "./volume:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+  create-resources:
+    restart: "no"
+    image: amazon/aws-cli:2.11.0
+    depends_on:
+      localstack:
+        condition: service_healthy
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=x
+      - AWS_SECRET_ACCESS_KEY=x
+    entrypoint: [ "sh", "-c" ]
+    command: [ "aws --endpoint-url=http://localstack:4566 sns create-topic --name order-processing-notifications &&
+     aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name orders-queue" ]

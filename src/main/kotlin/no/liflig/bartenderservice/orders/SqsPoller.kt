@@ -15,15 +15,16 @@ class SqsPoller(
   private val log = KotlinLogging.logger {}
 
   /** Loops forever untill the JVM exits. */
-  private val pollingThread: Thread = thread {
-    while (true) {
-      try {
-        poll()
-      } catch (ex: Throwable) {
-        log.error(ex) { "Failure when polling. Continuing regardless..." }
+  private val pollingThread: Thread =
+      thread(start = false) {
+        while (true) {
+          try {
+            poll()
+          } catch (ex: Throwable) {
+            log.error(ex) { "Failure when polling. Continuing regardless..." }
+          }
+        }
       }
-    }
-  }
 
   fun start() {
     check(!pollingThread.isAlive) { "Polling already started" }

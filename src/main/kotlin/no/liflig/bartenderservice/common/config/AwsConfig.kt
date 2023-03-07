@@ -12,8 +12,8 @@ data class AwsConfig(
     val awsUseLocalstack: Boolean,
     val snsEndpointOverride: String?,
     val sqsEndpointOverride: String?,
-    val sqsRegion: Region = Region.EU_WEST_1,
-    val snsRegion: Region = Region.EU_WEST_1,
+    val sqsRegion: Region = Region.US_EAST_1,
+    val snsRegion: Region = Region.US_EAST_1,
 ) {
   companion object {
     fun create(env: Environment): AwsConfig =
