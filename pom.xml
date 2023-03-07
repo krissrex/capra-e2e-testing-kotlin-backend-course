@@ -33,14 +33,6 @@
     <assertj-core.version>3.24.1</assertj-core.version>
   </properties>
 
-  <repositories>
-    <!-- Internal dependencies. Maybe not needed -->
-    <repository>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/capralifecycle/*</url>
-    </repository>
-  </repositories>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
