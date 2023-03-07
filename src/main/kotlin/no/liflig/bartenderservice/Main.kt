@@ -28,6 +28,8 @@ class App(private val config: Config) {
   fun start() {
     logger.info { "${config.applicationName} running build ${config.buildInfo}" }
 
+    logger.debug { "Config: $config" }
+
     startRestApi()
     if (config.queuePollerEnabled) {
       startOrderQueuePoller()

@@ -33,7 +33,6 @@
     <assertj-core.version>3.24.1</assertj-core.version>
 
     <liflig-logging-http4k.version>1.20230109.205830</liflig-logging-http4k.version>
-    <liflig-properties.version>2.20230109.083303</liflig-properties.version>
     <liflig-http4k-utils.version>1.20230110.023805</liflig-http4k-utils.version>
     <liflig-snapshot-test.version>1.20230109.082148</liflig-snapshot-test.version>
   </properties>
@@ -83,12 +82,6 @@
     <!--        Liflig          -->
     <dependency>
       <groupId>no.liflig</groupId>
-      <artifactId>properties</artifactId>
-      <version>${liflig-properties.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>no.liflig</groupId>
       <artifactId>snapshot-test</artifactId>
       <version>${liflig-snapshot-test.version}</version>
     </dependency>
@@ -120,6 +113,11 @@
     <dependency>
       <groupId>org.http4k</groupId>
       <artifactId>http4k-format-kotlinx-serialization</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.http4k</groupId>
+      <artifactId>http4k-cloudnative</artifactId>
     </dependency>
 
 
@@ -211,6 +209,7 @@
       <groupId>org.http4k</groupId>
       <artifactId>http4k-testing-kotest</artifactId>
       <version>4.35.4.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

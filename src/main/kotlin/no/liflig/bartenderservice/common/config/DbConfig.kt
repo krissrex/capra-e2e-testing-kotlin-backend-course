@@ -1,8 +1,9 @@
 package no.liflig.bartenderservice.common.config
 
-import java.util.Properties
-import no.liflig.properties.intRequired
-import no.liflig.properties.stringNotNull
+import org.http4k.cloudnative.env.Environment
+import org.http4k.cloudnative.env.EnvironmentKey
+import org.http4k.lens.int
+import org.http4k.lens.string
 
 data class DbConfig(
     val username: String,
@@ -18,15 +19,20 @@ data class DbConfig(
      * Reads in database values that are set from an AWS Secrets Manager json and placed into a
      * properties file.
      */
-    fun create(properties: Properties): DbConfig {
-      // The properties keys must match the json in AWS Secrets Manager for ProductDatabaseSecret
-      val username = properties.stringNotNull("database.username")
-      val password = properties.stringNotNull("database.password")
-      val port = properties.intRequired("database.port")
-      val dbname = properties.stringNotNull("database.dbname")
-      val hostname = properties.stringNotNull("database.host")
+    fun create(env: Environment): DbConfig {
+      val username = username(env)
+      val password = password(env)
+      val port = port(env)
+      val dbname = dbname(env)
+      val hostname = hostname(env)
 
       return DbConfig(username, password, dbname, port, hostname)
     }
   }
 }
+
+private val username = EnvironmentKey.string().required("database.username")
+private val password = EnvironmentKey.string().required("database.password")
+private val port = EnvironmentKey.int().required("database.port")
+private val dbname = EnvironmentKey.string().required("database.dbname")
+private val hostname = EnvironmentKey.string().required("database.host")

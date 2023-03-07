@@ -3,34 +3,29 @@
 package no.liflig.bartenderservice.common.health
 
 import java.time.Instant
-import java.time.format.DateTimeParseException
-import java.util.Properties
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import no.liflig.bartenderservice.common.serialization.InstantSerializer
-import no.liflig.properties.intRequired
-import no.liflig.properties.stringNotNull
+import org.http4k.cloudnative.env.Environment
+import org.http4k.cloudnative.env.EnvironmentKey
+import org.http4k.lens.instant
+import org.http4k.lens.int
+import org.http4k.lens.string
 
 /** Create [HealthBuildInfo] based on build.properties injected by the build. */
-fun Properties.getBuildInfo() =
+fun getBuildInfo(env: Environment) =
     BuildInfo(
-        timestamp =
-            try {
-              Instant.parse(stringNotNull("build.timestamp"))
-            } catch (ex: DateTimeParseException) {
-              Instant.ofEpochMilli(
-                  0L,
-              )
-            },
-        commit = stringNotNull("build.commit"),
-        branch = stringNotNull("build.branch"),
-        number =
-            try {
-              intRequired("build.number")
-            } catch (ex: IllegalArgumentException) {
-              0
-            },
+        timestamp = timestamp(env),
+        commit = commit(env),
+        branch = branch(env),
+        number = number(env),
     )
+
+private val timestamp =
+    EnvironmentKey.instant().defaulted("build.timestamp", Instant.ofEpochMilli(0))
+private val commit = EnvironmentKey.string().required("build.commit")
+private val branch = EnvironmentKey.string().required("build.branch")
+private val number = EnvironmentKey.int().defaulted("build.number", 0)
 
 @Serializable
 data class BuildInfo(

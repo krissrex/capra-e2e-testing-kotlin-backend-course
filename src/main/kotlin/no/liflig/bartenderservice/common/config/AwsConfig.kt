@@ -1,9 +1,9 @@
 package no.liflig.bartenderservice.common.config
 
-import java.util.Properties
-import no.liflig.properties.boolean
-import no.liflig.properties.string
-import no.liflig.properties.stringNotEmpty
+import org.http4k.cloudnative.env.Environment
+import org.http4k.cloudnative.env.EnvironmentKey
+import org.http4k.lens.boolean
+import org.http4k.lens.string
 import software.amazon.awssdk.regions.Region
 
 data class AwsConfig(
@@ -16,14 +16,22 @@ data class AwsConfig(
     val snsRegion: Region = Region.EU_WEST_1,
 ) {
   companion object {
-    fun create(properties: Properties): AwsConfig =
+    fun create(env: Environment): AwsConfig =
         AwsConfig(
-            orderQueueUrl = properties.stringNotEmpty("orderQueue.sqs.url"),
-            orderNotificationTopicArn =
-                properties.stringNotEmpty("orderProcessingNotification.sns.arn"),
-            awsUseLocalstack = properties.boolean("aws.localstack.enabled") ?: false,
-            sqsEndpointOverride = properties.string("aws.localstack.sqs.endpointOverride"),
-            snsEndpointOverride = properties.string("aws.localstack.sns.endpointOverride"),
+            orderQueueUrl = orderQueueUrl(env),
+            orderNotificationTopicArn = orderNotificationTopicArn(env),
+            awsUseLocalstack = awsUseLocalstack(env),
+            sqsEndpointOverride = sqsEndpointOverride(env),
+            snsEndpointOverride = snsEndpointOverride(env),
         )
   }
 }
+
+private val orderQueueUrl = EnvironmentKey.string().required("orderQueue.sqs.url")
+private val orderNotificationTopicArn =
+    EnvironmentKey.string().required("orderProcessingNotification.sns.arn")
+private val awsUseLocalstack = EnvironmentKey.boolean().defaulted("aws.localstack.enabled", false)
+private val sqsEndpointOverride =
+    EnvironmentKey.string().optional("aws.localstack.sqs.endpointOverride")
+private val snsEndpointOverride =
+    EnvironmentKey.string().optional("aws.localstack.sns.endpointOverride")
