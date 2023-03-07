@@ -127,11 +127,9 @@ Add `-DskipITs` to only disable integration tests.
 
 ## Linting
 
-Only lint: `mvn ktlint:check`
+Only lint: `mvn spotless:check`
 
-`mvn ktlint:ktlint` to create a report in `target/site/ktlint.html`.
-
-Fix: `mvn ktlint:format`
+Fix: `mvn spotless:apply`
 
 ## License
 

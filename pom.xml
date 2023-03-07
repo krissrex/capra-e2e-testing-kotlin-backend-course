@@ -36,8 +36,6 @@
     <liflig-properties.version>2.20230109.083303</liflig-properties.version>
     <liflig-http4k-utils.version>1.20230110.023805</liflig-http4k-utils.version>
     <liflig-snapshot-test.version>1.20230109.082148</liflig-snapshot-test.version>
-
-    <ktlint-maven-plugin.version>1.15.2</ktlint-maven-plugin.version>
   </properties>
 
   <repositories>
