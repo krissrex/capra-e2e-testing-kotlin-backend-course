@@ -95,6 +95,18 @@ The app needs a Postgres database, an SQS message queue, and an SNS pub/sub topi
 
 You can test the API with [src/test/http/menu.http](src/test/http/menu.http)
 
+### Sending test data
+
+```shell
+AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x aws --region=us-east-1 --endpoint-url=http://localhost:4566 sqs send-message --queue-url=http://localstack:4566/000000000000/orders-queue --message-body '{"orderId":"1","customer":{"id":"1","age":"TWENTY"},"paymentInfo":{"cardNumber":"123-1234-123-456"},"orderLines":[{"id":"1","name":"Hansa","price":"98","size":"0.6","ageLimit":"EIGHTEEN"},{"id":"4","name":"Hakkespett","price":"120","size":"0.4","ageLimit":"TWENTY"}]}'
+```
+
+or
+
+```shell
+awslocal sqs send-message --queue-url=http://localstack:4566/000000000000/orders-queue --message-body '{"orderId":"1","customer":{"id":"1","age":"TWENTY"},"paymentInfo":{"cardNumber":"123-1234-123-456"},"orderLines":[{"id":"1","name":"Hansa","price":"98","size":"0.6","ageLimit":"EIGHTEEN"},{"id":"4","name":"Hakkespett","price":"120","size":"0.4","ageLimit":"TWENTY"}]}'
+```
+
 ## Running tests
 
 ```shell

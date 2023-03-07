@@ -1,6 +1,7 @@
 package no.liflig.bartenderservice
 
 import java.net.URI
+import kotlin.system.exitProcess
 import mu.KotlinLogging
 import no.liflig.bartenderservice.common.config.Config
 import no.liflig.bartenderservice.orders.AgeLimitPolicy
@@ -18,6 +19,11 @@ import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sqs.SqsClient
 
 fun main(args: Array<String>) {
+  if ("--create-sample-order" in args) {
+    printExampleOrder()
+    exitProcess(0)
+  }
+
   App(Config.load()).start()
 }
 
