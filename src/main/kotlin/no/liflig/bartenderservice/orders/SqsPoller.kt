@@ -3,6 +3,7 @@ package no.liflig.bartenderservice.orders
 import kotlin.concurrent.thread
 import mu.KotlinLogging
 import net.logstash.logback.marker.Markers
+import org.slf4j.MDC
 import software.amazon.awssdk.services.sqs.SqsClient
 
 /** Responsible for polling messages from a queue and forwarding them to [messageProcessor]. */
@@ -33,7 +34,7 @@ class SqsPoller(
   }
 
   private fun poll() {
-    log.info { "Polling up to 20 seconds on queue $queueUrl..." }
+    log.debug { "Polling up to 20 seconds on queue $queueUrl..." }
     val response =
         sqsClient.receiveMessage { req ->
           req.queueUrl(queueUrl)
@@ -44,10 +45,14 @@ class SqsPoller(
 
     response.messages().forEach { message ->
       try {
-        messageProcessor.process(message.body())
-        sqsClient.deleteMessage { req ->
-          req.queueUrl(queueUrl)
-          req.receiptHandle(message.receiptHandle())
+        MDC.putCloseable("sqs.messageId", message.messageId()).use {
+          log.info { "Processing message" }
+          messageProcessor.process(message.body())
+          log.info { "Processing complete" }
+          sqsClient.deleteMessage { req ->
+            req.queueUrl(queueUrl)
+            req.receiptHandle(message.receiptHandle())
+          }
         }
       } catch (ex: Throwable) {
         log.error(

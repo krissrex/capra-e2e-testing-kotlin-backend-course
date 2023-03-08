@@ -19,7 +19,7 @@ class OrderRepository(private val jdbi: Jdbi) {
             .bind("data", order.toJson())
             .execute()
       }
-      log.info { "Created order $uuid" }
+      log.info { "Created order ${order.orderId} as $uuid" }
 
       return null
     } catch (e: Exception) {

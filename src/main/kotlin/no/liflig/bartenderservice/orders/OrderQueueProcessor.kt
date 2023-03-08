@@ -43,9 +43,11 @@ class OrderQueueProcessor(
 
       orderReadyNotifyer.notifyProcessingStarted(order.orderId)
 
+      // Let the bar-tender do some work...
       Thread.sleep(3.seconds.inWholeMilliseconds)
 
       orderReadyNotifyer.notifyOrderReady(order.orderId)
+      log.info { "Processing of order ${order.orderId} complete." }
     }
   }
 }

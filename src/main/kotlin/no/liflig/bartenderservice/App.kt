@@ -20,27 +20,30 @@ import software.amazon.awssdk.services.sqs.SqsClient
 
 /** Responsible for wiring up all dependencies and starting services. */
 class App(private val config: Config) {
-  private val logger = KotlinLogging.logger {}
+  private val log = KotlinLogging.logger {}
 
   fun start() {
-    logger.info { "${config.applicationName} running build ${config.buildInfo.toJson()}" }
+    log.info { "${config.applicationName} running build ${config.buildInfo.toJson()}" }
 
-    logger.debug { "Config: $config" }
+    log.debug { "Config: $config" }
 
     startRestApi(config)
+
     if (config.queuePollerEnabled) {
       startOrderQueuePoller(config)
+    } else {
+      log.warn { "Not starting queue poller. It is disabled by config" }
     }
   }
 
   private fun startRestApi(config: Config) {
-    logger.info { "Starting API" }
+    log.info { "Starting API" }
     api(config).asServer(Jetty(config.serverPort)).start()
-    logger.info { "Started API on port ${config.serverPort}" }
+    log.info { "Started API on port ${config.serverPort}" }
   }
 
   private fun startOrderQueuePoller(config: Config) {
-    logger.info { "Starting queue poller" }
+    log.info { "Starting queue poller" }
 
     val databaseConnection = DatabaseConnection(config.database)
     databaseConnection.initialize()
@@ -62,7 +65,7 @@ class App(private val config: Config) {
             ),
         )
         .start()
-    logger.info {
+    log.info {
       "Started queue poller on queue ${config.awsConfig.orderQueueUrl} and" +
           " sending events to ${config.awsConfig.orderNotificationTopicArn}"
     }
