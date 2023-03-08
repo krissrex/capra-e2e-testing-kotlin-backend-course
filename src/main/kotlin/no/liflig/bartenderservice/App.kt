@@ -46,7 +46,7 @@ class App(private val config: Config) {
             createSqsClient(config),
             OrderQueueProcessor(
                 ageLimitPolicy = AgeLimitPolicy(),
-                paymentService = PaymentService(),
+                paymentService = PaymentService(paymentProviderUrl = config.paymentProviderUrl),
                 orderRepository = OrderRepository(),
                 orderReadyNotifyer =
                     OrderReadyNotifyer(

@@ -13,7 +13,8 @@ data class Config(
     val buildInfo: BuildInfo,
     val database: DbConfig,
     val queuePollerEnabled: Boolean,
-    val awsConfig: AwsConfig
+    val awsConfig: AwsConfig,
+    val paymentProviderUrl: String
 ) {
 
   companion object {
@@ -32,7 +33,7 @@ data class Config(
               DbConfig.create(env),
               queuePollerEnabled(env),
               AwsConfig.create(env),
-          )
+              paymentProviderUrl(env))
         }
   }
 }
@@ -40,6 +41,7 @@ data class Config(
 private val appName = EnvironmentKey.string().required("service.name")
 private val port = EnvironmentKey.int().defaulted("server.port", 8080)
 private val queuePollerEnabled = EnvironmentKey.boolean().defaulted("orderQueue.enabled", true)
+private val paymentProviderUrl = EnvironmentKey.string().required("paymentProvider.url")
 
 private fun Environment.Companion.fromFileIfExist(file: File): Environment {
   return if (file.exists() && file.isFile) {
