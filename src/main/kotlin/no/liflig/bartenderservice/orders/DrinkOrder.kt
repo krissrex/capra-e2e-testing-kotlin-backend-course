@@ -4,8 +4,8 @@ import java.math.BigDecimal
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
-import no.liflig.bartenderservice.drinkmenu.domain.AgeLimit
-import no.liflig.bartenderservice.drinkmenu.domain.Drink
+import no.liflig.bartenderservice.drinkmenu.AgeLimit
+import no.liflig.bartenderservice.drinkmenu.Drink
 
 /** A list of drinks ordered by a customer. */
 @Serializable

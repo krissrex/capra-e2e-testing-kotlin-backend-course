@@ -1,4 +1,4 @@
-package no.liflig.bartenderservice.drinkmenu.domain
+package no.liflig.bartenderservice.drinkmenu
 
 import kotlinx.serialization.Serializable
 

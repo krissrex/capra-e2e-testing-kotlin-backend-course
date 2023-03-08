@@ -1,7 +1,7 @@
 package no.liflig.bartenderservice.orders
 
-import no.liflig.bartenderservice.drinkmenu.domain.AgeLimit
-import no.liflig.bartenderservice.drinkmenu.domain.Drink
+import no.liflig.bartenderservice.drinkmenu.AgeLimit
+import no.liflig.bartenderservice.drinkmenu.Drink
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 

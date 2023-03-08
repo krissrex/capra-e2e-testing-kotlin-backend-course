@@ -1,8 +1,5 @@
-package no.liflig.bartenderservice.drinkmenu.api.routes
+package no.liflig.bartenderservice.drinkmenu
 
-import no.liflig.bartenderservice.drinkmenu.domain.AgeLimit
-import no.liflig.bartenderservice.drinkmenu.domain.Drink
-import no.liflig.bartenderservice.drinkmenu.domain.DrinkMenu
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.RouteMetaDsl
 import org.http4k.contract.Tag

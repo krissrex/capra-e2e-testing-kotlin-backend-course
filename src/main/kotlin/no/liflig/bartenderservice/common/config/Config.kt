@@ -1,8 +1,6 @@
 package no.liflig.bartenderservice.common.config
 
 import java.io.File
-import no.liflig.bartenderservice.common.health.BuildInfo
-import no.liflig.bartenderservice.common.health.getBuildInfo
 import org.http4k.cloudnative.env.Environment
 import org.http4k.cloudnative.env.EnvironmentKey
 import org.http4k.lens.boolean
@@ -30,7 +28,7 @@ data class Config(
           Config(
               appName(env),
               port(env),
-              getBuildInfo(env),
+              BuildInfo.create(env),
               DbConfig.create(env),
               queuePollerEnabled(env),
               AwsConfig.create(env),

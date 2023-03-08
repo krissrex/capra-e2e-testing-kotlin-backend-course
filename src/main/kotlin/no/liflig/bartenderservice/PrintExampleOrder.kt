@@ -1,8 +1,8 @@
 package no.liflig.bartenderservice
 
 import kotlinx.serialization.json.Json
-import no.liflig.bartenderservice.drinkmenu.domain.AgeLimit
-import no.liflig.bartenderservice.drinkmenu.domain.Drink
+import no.liflig.bartenderservice.drinkmenu.AgeLimit
+import no.liflig.bartenderservice.drinkmenu.Drink
 import no.liflig.bartenderservice.orders.Customer
 import no.liflig.bartenderservice.orders.DrinkOrder
 import no.liflig.bartenderservice.orders.PaymentInfo

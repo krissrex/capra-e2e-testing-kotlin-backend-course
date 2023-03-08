@@ -2,7 +2,7 @@ package no.liflig.bartenderservice.orders
 
 import kotlin.time.Duration.Companion.seconds
 import mu.KotlinLogging
-import no.liflig.bartenderservice.drinkmenu.domain.AgeLimit
+import no.liflig.bartenderservice.drinkmenu.AgeLimit
 import org.slf4j.MDC
 
 /** Picks incoming orders from the work queue and tries to process them. */
