@@ -25,7 +25,9 @@ data class DrinkMenu(
 data class Drink(
     val id: String,
     val name: String,
+    /** In kroner. Like `100` or `60.20`. */
     val price: String,
+    /** In liter. Like `0.5`, `0.6`. */
     val size: String,
     val ageLimit: AgeLimit,
 )

@@ -47,6 +47,34 @@ The SQS poller loops forever, fetching new messages and sending them to a queue 
 The `OrderQueueProcessor` coordinates several services and persists to the database.
 Then, an event is sent out using `OrderReadyNotifyer`.
 
+### What is missing?
+
+The code largely works (I think? No tests to verify...).
+
+The tests, however, are missing.
+
+**TODO-list:**
+
+1. Test-setup
+  - Database: Testcontainers Postgres
+  - AWS SQS and SNS: Testcontainers Localstack
+  - Payments provider: Wiremock
+  - Tweak config with correct values
+2. [OrderRepositoryTes](src/test/kotlin/no/liflig/bartenderservice/orders/OrderRepositoryTest.kt) needs some assertions.
+  - AssertJ
+  - verifyJsonSnapshot
+3. [ApiEndToEndTest](src/test/kotlin/no/liflig/bartenderservice/ApiEndToEndTest.kt) needs some assertions.
+  - RestAssured
+  - verifyJsonSnapshot
+4. [OrderProcessingEndToEndTest](src/test/kotlin/no/liflig/bartenderservice/OrderProcessingEndToEndTest.kt) needs some
+   input and assertions.
+  - Inspect the SNS published messages
+  - database SELECT
+  - Wiremock verify
+  - Inspect SQS available messages count
+
+---
+
 ## Getting started
 
 ### Tool dependencies
