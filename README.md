@@ -56,22 +56,29 @@ The tests, however, are missing.
 **TODO-list:**
 
 1. Test-setup
-  - Database: Testcontainers Postgres
-  - AWS SQS and SNS: Testcontainers Localstack
-  - Payments provider: Wiremock
-  - Tweak config with correct values
+
+- Database: Testcontainers Postgres
+- AWS SQS and SNS: Testcontainers Localstack
+- Payments provider: Wiremock
+- Tweak config with correct values
+
 2. [OrderRepositoryTes](src/test/kotlin/no/liflig/bartenderservice/orders/OrderRepositoryTest.kt) needs some assertions.
-  - AssertJ
-  - verifyJsonSnapshot
+
+- AssertJ
+- verifyJsonSnapshot
+
 3. [ApiEndToEndTest](src/test/kotlin/no/liflig/bartenderservice/ApiEndToEndTest.kt) needs some assertions.
-  - RestAssured
-  - verifyJsonSnapshot
+
+- RestAssured
+- verifyJsonSnapshot
+
 4. [OrderProcessingEndToEndTest](src/test/kotlin/no/liflig/bartenderservice/OrderProcessingEndToEndTest.kt) needs some
    input and assertions.
-  - Inspect the SNS published messages
-  - database SELECT
-  - Wiremock verify
-  - Inspect SQS available messages count
+
+- Inspect the SNS published messages: Awaitility + http client + localstack API
+- Storage: database SELECT
+- Payment provider: Wiremock verify
+- Inspect SQS available messages count == 0
 
 ---
 
