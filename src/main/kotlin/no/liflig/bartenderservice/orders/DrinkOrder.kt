@@ -17,6 +17,8 @@ data class DrinkOrder(
 ) {
   @Transient val totalPrice: BigDecimal = orderLines.sumOf { BigDecimal(it.price) }
 
+  fun toJson(): String = Json.encodeToString(serializer(), this)
+
   companion object {
     fun fromJson(json: String): DrinkOrder = Json.decodeFromString(serializer(), json)
   }

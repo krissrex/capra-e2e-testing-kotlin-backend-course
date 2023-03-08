@@ -3,6 +3,7 @@ package no.liflig.bartenderservice
 import java.net.URI
 import mu.KotlinLogging
 import no.liflig.bartenderservice.common.config.Config
+import no.liflig.bartenderservice.common.database.DatabaseConnection
 import no.liflig.bartenderservice.orders.AgeLimitPolicy
 import no.liflig.bartenderservice.orders.AwsSnsSender
 import no.liflig.bartenderservice.orders.OrderQueueProcessor
@@ -28,7 +29,7 @@ class App(private val config: Config) {
 
     startRestApi(config)
     if (config.queuePollerEnabled) {
-      startOrderQueuePoller()
+      startOrderQueuePoller(config)
     }
   }
 
@@ -38,8 +39,11 @@ class App(private val config: Config) {
     logger.info { "Started API on port ${config.serverPort}" }
   }
 
-  private fun startOrderQueuePoller() {
+  private fun startOrderQueuePoller(config: Config) {
     logger.info { "Starting queue poller" }
+
+    val databaseConnection = DatabaseConnection(config.database)
+    databaseConnection.initialize()
 
     SqsPoller(
             config.awsConfig.orderQueueUrl,
@@ -47,7 +51,7 @@ class App(private val config: Config) {
             OrderQueueProcessor(
                 ageLimitPolicy = AgeLimitPolicy(),
                 paymentService = PaymentService(paymentProviderUrl = config.paymentProviderUrl),
-                orderRepository = OrderRepository(),
+                orderRepository = OrderRepository(databaseConnection.jdbi),
                 orderReadyNotifyer =
                     OrderReadyNotifyer(
                         AwsSnsSender(

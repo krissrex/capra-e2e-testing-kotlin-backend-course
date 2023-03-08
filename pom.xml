@@ -17,18 +17,25 @@
     <build.branch>LOCAL</build.branch>
     <build.number>0</build.number>
 
+    <!-- Project settings -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.7.22</kotlin.version>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
     <jdk.version>17</jdk.version>
+    <kotlin.version>1.7.22</kotlin.version>
 
+    <!-- Dependency versions -->
     <kotlinx-serialization.version>1.4.1</kotlinx-serialization.version>
     <kotlin-logging.version>3.0.4</kotlin-logging.version>
     <slf4j.version>2.0.6</slf4j.version>
     <logback-classic.version>1.4.5</logback-classic.version>
     <aws-sdk.version>2.19.14</aws-sdk.version>
+    <jdbi.version>3.37.1</jdbi.version>
+    <HikariCP.version>5.0.1</HikariCP.version>
+    <postgresql.version>42.5.4</postgresql.version>
+    <flyway.version>9.15.1</flyway.version>
 
+    <!-- Testing -->
     <mockk.version>1.13.1</mockk.version>
     <assertj-core.version>3.24.1</assertj-core.version>
   </properties>
@@ -54,18 +61,6 @@
   </dependencyManagement>
 
   <dependencies>
-
-    <dependency>
-      <groupId>software.amazon.awssdk</groupId>
-      <artifactId>sns</artifactId>
-      <version>${aws-sdk.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>software.amazon.awssdk</groupId>
-      <artifactId>sqs</artifactId>
-      <version>${aws-sdk.version}</version>
-    </dependency>
-
     <!--        Kotlin          -->
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
@@ -73,6 +68,45 @@
       <version>${kotlin.version}</version>
     </dependency>
 
+    <!-- AWS SQS and SNS -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sqs</artifactId>
+      <version>${aws-sdk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sns</artifactId>
+      <version>${aws-sdk.version}</version>
+    </dependency>
+
+    <!-- Database -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>${HikariCP.version}</version>
+    </dependency>
+    <!-- Fluent SQL statements -->
+    <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-core</artifactId>
+      <version>${jdbi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-kotlin</artifactId>
+      <version>${jdbi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>${flyway.version}</version>
+    </dependency>
 
     <!--        HTTP4K          -->
     <dependency>
