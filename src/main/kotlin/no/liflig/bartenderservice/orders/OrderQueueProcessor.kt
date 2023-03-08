@@ -1,5 +1,6 @@
 package no.liflig.bartenderservice.orders
 
+import kotlin.jvm.Throws
 import kotlin.time.Duration.Companion.seconds
 import mu.KotlinLogging
 import no.liflig.bartenderservice.drinkmenu.AgeLimit
@@ -19,8 +20,13 @@ class OrderQueueProcessor(
     MDC.putCloseable("order.id", order.orderId).use {
       log.info { "Received order $order" }
 
-      ageLimitPolicy.enforceAgeLimitPolicy(order)
-      log.info { "Age limit enforced" }
+      try {
+        ageLimitPolicy.enforceAgeLimitPolicy(order)
+        log.info { "Age limit enforced" }
+      } catch (e: IllegalArgumentException) {
+        log.warn { "Invalid age when purchasing this order. Discarding order" }
+        return
+      }
 
       val paymentDeviation =
           paymentService.collectPayment(order.paymentInfo.cardNumber, order.totalPrice)
@@ -45,6 +51,12 @@ class OrderQueueProcessor(
 }
 
 class AgeLimitPolicy {
+
+  /**
+   * @throws IllegalArgumentException if the customer is not allowed to purchase an item in their
+   *   order
+   */
+  @Throws(IllegalArgumentException::class)
   fun enforceAgeLimitPolicy(order: DrinkOrder) {
     when (order.customer.age) {
       AgeLimit.NONE ->

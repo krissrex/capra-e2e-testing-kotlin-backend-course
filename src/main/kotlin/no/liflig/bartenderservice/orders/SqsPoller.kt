@@ -54,7 +54,7 @@ class SqsPoller(
             Markers.append("sqsMessage", message.body()),
             ex,
         ) {
-          "Failed to process message ${message.messageId()}"
+          "Failed to process message ${message.messageId()}. Will be retried from SQS later"
         }
       }
     }
