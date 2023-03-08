@@ -24,10 +24,10 @@ More information is found here:
 
 ![component architecture](component-architecture.drawio.svg)
 
-You can see that the 5 responsibilities also require 4 external systems (queue, database, topic),
+You can see that the 5 responsibilities also require 4 external systems (queue, payments, database, topic),
 and it provides a service for external users (REST-API).
 
-We need end-to-end tests to have *some* confidence that our backend works with these external systems.
+We need an end-to-end tests to have *some* confidence that our backend works with these external systems.
 Mocking them in tests will not be good enough.
 
 (For *real confidence*, you can go even further and create **system tests**, where you inject data into a real, deployed
@@ -35,9 +35,11 @@ AWS account as part of your CD-pipeline. This is out of scope for this course.)
 
 #### Organization of code
 
+![code architecture](code-architecture.drawio.svg)
+
 The `Main`-file starts the application.
 It loads a `Config` into an `App`.
-The app starts serving the REST-API, and starts a `SqsPoller` to read from its SQS queue.
+The app starts serving the REST-API, and starts an `SqsPoller` to read from its SQS queue.
 
 The API provides the output of `GetDrinkMenuRoute`.
 
