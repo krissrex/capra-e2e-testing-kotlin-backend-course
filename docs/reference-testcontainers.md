@@ -107,22 +107,6 @@ class Localstack {
 
 ```
 
-#### Creating an AWS SDK Client
-
-```kotlin
-SnsClient.builder()
-  .endpointOverride(localStackContainer.getEndpointOverride(LocalStackContainer.Service.SNS))
-  .credentialsProvider(
-    StaticCredentialsProvider.create(
-      AwsBasicCredentials.create(
-        localStackContainer.getAccessKey(), localStackContainer.getSecretKey()
-      )
-    )
-  )
-  .region(Region.of(localStackContainer.getRegion()))
-  .build()
-```
-
 ### Granting a container access to your service/machine
 
 Used for services that call back, like SNS HTTP subscriptions.
