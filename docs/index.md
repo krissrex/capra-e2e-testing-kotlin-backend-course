@@ -1,6 +1,7 @@
 # References
 
-- [Awaitility.md](./reference-awaitility.md)
-- [Localstack.md](./reference-localstack.md)
-- [Rest-assured.md](./reference-rest-assured.md)
-- [Testcontainers.md](./reference-testcontainers.md)
+- [Awaitility](./reference-awaitility.md)
+- [Junit TestExtension](./reference-junit-e2e-test-extension.md)
+- [Localstack](./reference-localstack.md)
+- [Rest-assured](./reference-rest-assured.md)
+- [Testcontainers](./reference-testcontainers.md)
