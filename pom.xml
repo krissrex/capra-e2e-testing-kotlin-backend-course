@@ -232,6 +232,49 @@
       <version>1.13.3</version>
       <scope>test</scope>
     </dependency>
+
+    <!--
+        <dependency>
+          &lt;!&ndash;Database &ndash;&gt;
+          <groupId>org.testcontainers</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>1.17.6</version>
+          <scope>test</scope>
+        </dependency>
+    -->
+
+    <!--
+        <dependency>
+          &lt;!&ndash;REST API testing&ndash;&gt;
+          <groupId>io.rest-assured</groupId>
+          <artifactId>rest-assured</artifactId>
+          <version>5.3.0</version>
+          <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>commons-logging</groupId>
+              <artifactId>commons-logging</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+    -->
+
+    <!--
+        <dependency>
+          &lt;!&ndash; Localstack. AWS testing&ndash;&gt;
+          <groupId>org.testcontainers</groupId>
+          <artifactId>localstack</artifactId>
+          <version>1.17.6</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          &lt;!&ndash; Needed by localstack. &ndash;&gt;
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-core</artifactId>
+          <version>1.12.420</version>
+          <scope>test</scope>
+        </dependency>
+    -->
   </dependencies>
 
 
