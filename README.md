@@ -80,6 +80,8 @@ The tests, however, are missing.
 - Payment provider: Wiremock verify
 - Inspect SQS available messages count == 0
 
+See the docs in [docs/](docs/index.md) for references on testing-llibraries used.
+
 ---
 
 ## Getting started
