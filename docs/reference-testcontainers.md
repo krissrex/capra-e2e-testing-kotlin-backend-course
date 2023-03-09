@@ -82,6 +82,8 @@ It's not a big deal; [Ryuk](https://github.com/testcontainers/moby-ryuk) will re
 
 ### Starting Localstack
 
+**Responsibility:** Simulate Amazon Web Services (AWS). Topics, queues.
+
 https://www.testcontainers.org/modules/localstack/
 
 ```kotlin
