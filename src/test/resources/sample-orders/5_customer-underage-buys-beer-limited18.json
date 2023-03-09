@@ -1,0 +1,19 @@
+{
+  "orderId": "5",
+  "customer": {
+    "id": "3",
+    "age": "NONE"
+  },
+  "paymentInfo": {
+    "cardNumber": "123-1234-123-456"
+  },
+  "orderLines": [
+    {
+      "id": "1",
+      "name": "Hansa",
+      "price": "98",
+      "size": "0.6",
+      "ageLimit": "EIGHTEEN"
+    }
+  ]
+}

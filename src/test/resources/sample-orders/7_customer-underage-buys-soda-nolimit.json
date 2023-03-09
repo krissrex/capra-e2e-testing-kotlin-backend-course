@@ -1,0 +1,19 @@
+{
+  "orderId": "7",
+  "customer": {
+    "id": "3",
+    "age": "NONE"
+  },
+  "paymentInfo": {
+    "cardNumber": "123-1234-123-456"
+  },
+  "orderLines": [
+    {
+      "id": "2",
+      "name": "Brus som gjør deg tysk",
+      "price": "10",
+      "size": "3.0",
+      "ageLimit": "NONE"
+    }
+  ]
+}

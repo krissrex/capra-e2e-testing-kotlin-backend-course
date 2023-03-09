@@ -4,6 +4,7 @@ import no.liflig.snapshot.verifyJsonSnapshot
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import test.util.Integration
+import test.util.loadTestFile
 
 class OrderProcessingEndToEndTest {
 
@@ -15,6 +16,14 @@ class OrderProcessingEndToEndTest {
 
     // When
     // TODO send a message to the queue
+
+    loadTestFile("/sample-orders/1_customer-aged20-buys-beer-limited18-and-spirits-limited20.json")
+    loadTestFile("/sample-orders/2_customer-aged18-buys-beer-limited18-and-spirits-limited20.json")
+    loadTestFile("/sample-orders/3_customer-aged18-buys-beer-limited18.json")
+    loadTestFile("/sample-orders/4_customer-aged18-buys-nothing.json")
+    loadTestFile("/sample-orders/5_customer-underage-buys-beer-limited18.json")
+    loadTestFile("/sample-orders/6_customer-underage-buys-booze-limited20.json")
+    loadTestFile("/sample-orders/7_customer-underage-buys-soda-nolimit.json")
 
     // Then
     // TODO await a message out from SNS

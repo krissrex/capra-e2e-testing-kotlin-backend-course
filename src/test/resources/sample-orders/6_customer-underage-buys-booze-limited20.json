@@ -1,0 +1,19 @@
+{
+  "orderId": "6",
+  "customer": {
+    "id": "3",
+    "age": "NONE"
+  },
+  "paymentInfo": {
+    "cardNumber": "123-1234-123-456"
+  },
+  "orderLines": [
+    {
+      "id": "4",
+      "name": "Hakkespett",
+      "price": "120",
+      "size": "0.4",
+      "ageLimit": "TWENTY"
+    }
+  ]
+}
