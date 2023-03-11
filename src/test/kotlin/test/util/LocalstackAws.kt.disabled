@@ -1,4 +1,5 @@
 package test.util
+// Rename extension to `.kt` after adding Localstack dependency in pom.
 
 import kotlinx.serialization.json.JsonPrimitive
 import org.testcontainers.containers.localstack.LocalStackContainer
