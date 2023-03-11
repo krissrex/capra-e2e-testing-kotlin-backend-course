@@ -8,6 +8,61 @@ Junit [@ExtendWith](https://junit.org/junit5/docs/5.8.0/api/org.junit.jupiter.ap
 to delegate lifecycle callbacks and ParameterResolver to another class.
 Using this pattern reduces clutter inside tests, and makes your test-setup reusable.
 
+## General JUnit test execution order
+
+Define a normal test class like this:
+
+```kotlin
+class MyThingTest {
+  // Junit setup
+  @BeforeAll
+  fun beforeAll() {
+  }
+
+  @BeforeEach
+  fun beforeEach() {
+  }
+
+  @AfterEach
+  fun afterEach() {
+  }
+
+  @AfterAll
+  fun afterAll() {
+  }
+
+
+  // Test cases
+  @Test
+  fun testOne() {
+  }
+
+  @Test
+  fun testTwo() {
+  }
+
+  @Test
+  fun testThree() {
+  }
+}
+```
+
+Then, the tests will be executed by Junit like this:
+
+```text
+beforeAll
+    beforeEach
+        testOne
+    afterEach
+    beforeEach
+        testTwo
+    afterEach
+    beforeEach
+        testThree
+    afterEach
+afterAll
+```
+
 ## Usage
 
 ### Basic setup
