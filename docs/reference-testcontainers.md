@@ -86,6 +86,8 @@ It's not a big deal; [Ryuk](https://github.com/testcontainers/moby-ryuk) will re
 
 https://www.testcontainers.org/modules/localstack/
 
+See [reference-localstack](./reference-localstack.md).
+
 ```kotlin
 class Localstack {
 
@@ -95,11 +97,9 @@ class Localstack {
 
   fun initLocalstack() {
     val localstackImage: DockerImageName = DockerImageName.parse("localstack/localstack:1.4.0")
-    localStackContainer =
-      new LocalStackContainer
-        (localstackImage).withServices(
-          LocalStackContainer.Service.SNS, LocalStackContainer.Service.SQS
-        )
+    localStackContainer = LocalStackContainer(localstackImage).withServices(
+      LocalStackContainer.Service.SNS, LocalStackContainer.Service.SQS
+    )
 
     localStackContainer.start()
   }
