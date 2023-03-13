@@ -3,6 +3,7 @@ package no.liflig.bartenderservice.orders
 import java.util.UUID
 import mu.KotlinLogging
 import org.jdbi.v3.core.Jdbi
+import org.jdbi.v3.core.statement.UnableToExecuteStatementException
 
 private val log = KotlinLogging.logger {}
 
@@ -22,7 +23,16 @@ class OrderRepository(private val jdbi: Jdbi) {
       log.info { "Created order ${order.orderId} as $uuid" }
 
       return null
-    } catch (e: Exception) {
+    } catch (ex: UnableToExecuteStatementException) {
+      if (ex.message?.contains("duplicate key") == true) {
+        log.error(ex) { "Duplicate order ${order.orderId}" }
+        return OrderCreationDeviation.OrderAlreadyExists(orderId = order.orderId)
+      }
+
+      log.error(ex) { "Error when creating order" }
+      return OrderCreationDeviation.DatabaseUnavailable
+    } catch (ex: Exception) {
+      log.error(ex) { "Error when creating order" }
       return OrderCreationDeviation.DatabaseUnavailable
     }
   }
