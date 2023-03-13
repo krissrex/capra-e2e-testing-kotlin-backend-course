@@ -2,6 +2,7 @@ package no.liflig.bartenderservice.orders
 
 import java.math.BigDecimal
 import kotlinx.serialization.Serializable
+import mu.KotlinLogging
 import no.liflig.bartenderservice.common.serialization.PrettyHttp4kKotlinxSerialization.auto
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Body
@@ -9,6 +10,8 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.with
+
+private val log = KotlinLogging.logger {}
 
 class PaymentService(
     private val paymentProviderUrl: String,
@@ -34,7 +37,10 @@ class PaymentService(
     }
 
     return when (response.bodyString()) {
-      "paid successfully" -> null
+      "paid successfully" -> {
+        log.info { "Collected payment from card $cardNumber" }
+        null
+      }
       "insufficient balance" -> PaymentDeviation.NotEnoughBalanceOnCustomerCard
       "invalid card number" -> PaymentDeviation.InvalidCardNumber
       else -> throw RuntimeException("Unrecognized payment provider response")
