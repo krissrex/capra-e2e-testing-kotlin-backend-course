@@ -8,13 +8,22 @@ services:
     ports:
       - "8080:8080" # http://localhost:8080/health
     links:
-      - db:db
-      - localstack:localstack
+      - db
+      - localstack
+      - payment-api
     environment:
       - aws.localstack.enabled=true
       - aws.localstack.sqs.endpointOverride=http://localstack:4566
       - aws.localstack.sns.endpointOverride=http://localstack:4566
       - orderQueue.sqs.url=http://localstack:4566/000000000000/orders-queue
+      - database.host=db
+      - paymentProvider.url=http://payment-api:8080/api/payments
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     depends_on:
       db:
         condition: service_started
@@ -22,6 +31,9 @@ services:
         condition: service_healthy
       create-resources:
         condition: service_completed_successfully
+      payment-api:
+        condition: service_started
+
   db:
     image: postgres:14
     ports:
@@ -29,6 +41,7 @@ services:
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=app
   localstack:
     container_name: localstack_main
     image: localstack/localstack:1.4.0
@@ -41,6 +54,7 @@ services:
     volumes:
       - "./volume:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+
   create-resources:
     restart: "no"
     image: amazon/aws-cli:2.11.0
@@ -54,3 +68,8 @@ services:
     entrypoint: [ "sh", "-c" ]
     command: [ "aws --endpoint-url=http://localstack:4566 sns create-topic --name order-processing-notifications &&
      aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name orders-queue" ]
+
+  payment-api:
+    image: wiremock/wiremock:2.32.0-alpine
+    volumes:
+      - ./docker-compose-paymentapi-stub.json:/home/wiremock/mappings/payments.json:ro
