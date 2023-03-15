@@ -122,7 +122,8 @@ data class QueueWithDlq(val queueUrl: String, val dlqUrl: String) {
             req.attributes(
                 mapOf(
                     QueueAttributeName.REDRIVE_POLICY to
-                        """{"deadLetterTargetArn": ${JsonPrimitive(dlqArn)}, "maxReceiveCount": "2"}"""))
+                        """{"deadLetterTargetArn": ${JsonPrimitive(dlqArn)}, "maxReceiveCount": "2"}""",
+                    QueueAttributeName.VISIBILITY_TIMEOUT to "4"))
           }
 
       return QueueWithDlq(queueUrl = queueResponse.queueUrl(), dlqUrl = dlqResponse.queueUrl())
