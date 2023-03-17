@@ -1,6 +1,8 @@
 package no.liflig.bartenderservice
 
+import no.liflig.bartenderservice.common.config.AwsConfig
 import no.liflig.bartenderservice.common.config.Config
+import no.liflig.bartenderservice.common.config.DbConfig
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
@@ -9,6 +11,16 @@ import org.junit.jupiter.api.extension.Extension
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.containers.localstack.LocalStackContainer
+import org.testcontainers.utility.DockerImageName
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.sns.SnsClient
+import software.amazon.awssdk.services.sqs.SqsClient
+import test.util.QueueWithDlq
+import test.util.TopicWithQueue
+import test.util.createOrderProcessingEventTopic
+import test.util.createOrdersQueue
 
 /**
  * ```kt
@@ -41,6 +53,14 @@ class EndToEndTestExtension :
     private var started = false
 
     private lateinit var config: Config
+    private lateinit var postgres: PostgreSQLContainer<*>
+    private lateinit var localstack: LocalStackContainer
+
+    private lateinit var sqsClient: SqsClient
+    private lateinit var snsClient: SnsClient
+
+    private lateinit var ordersQueue: QueueWithDlq
+    private lateinit var orderEventsTopic: TopicWithQueue
 
     /** For parameter resolution. */
     private val E2E_TEST_NAMESPACE = ExtensionContext.Namespace.create("E2E_TEST")
@@ -54,15 +74,59 @@ class EndToEndTestExtension :
   }
 
   fun setupTestSuite() {
-    config = Config.load()
-    // initDatabase(config)
+    config = Config.load().copy(queuePollerEnabled = true)
+    initDatabase(config)
+    initAws(config)
+  }
+
+  private fun initAws(config: Config) {
+    val localstackImage = DockerImageName.parse("localstack/localstack:1.4.0")
+    localstack =
+        LocalStackContainer(localstackImage)
+            .withServices(LocalStackContainer.Service.SNS, LocalStackContainer.Service.SQS)
+    localstack.start()
+
+    sqsClient = test.util.createSqsClient(localstack)
+    snsClient = test.util.createSnsClient(localstack)
+
+    ordersQueue = createOrdersQueue(sqsClient)
+    orderEventsTopic = createOrderProcessingEventTopic(snsClient, sqsClient)
+
+    config.awsConfig =
+        AwsConfig(
+            awsUseLocalstack = true,
+            snsRegion = Region.US_EAST_1,
+            sqsRegion = Region.US_EAST_1,
+            snsEndpointOverride =
+                localstack.getEndpointOverride(LocalStackContainer.Service.SNS).toString(),
+            sqsEndpointOverride =
+                localstack.getEndpointOverride(LocalStackContainer.Service.SQS).toString(),
+            orderNotificationTopicArn = orderEventsTopic.topicArn,
+            orderQueueUrl = ordersQueue.queueUrl)
+  }
+
+  private fun initDatabase(config: Config) {
+    postgres = PostgreSQLContainer("postgres:14.2-alpine")
+    postgres.withDatabaseName("app").withUsername("test").withPassword("test").start()
+
+    config.database =
+        DbConfig(
+            username = "test",
+            password = "test",
+            dbname = "app",
+            port = postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT),
+            hostname = "localhost",
+            jdbcUrl = postgres.getJdbcUrl())
   }
 
   override fun beforeEach(context: ExtensionContext) {}
 
   override fun afterEach(context: ExtensionContext?) {}
 
-  override fun afterAll(context: ExtensionContext?) {}
+  override fun afterAll(context: ExtensionContext?) {
+    postgres.stop()
+    localstack.stop()
+  }
 
   override fun supportsParameter(
       parameterContext: ParameterContext,
@@ -70,7 +134,11 @@ class EndToEndTestExtension :
   ): Boolean {
     return parameterContext.parameter.type in
         listOf(
-            Config::class.java
+            Config::class.java,
+            SqsClient::class.java,
+            SnsClient::class.java,
+            QueueWithDlq::class.java,
+            TopicWithQueue::class.java
             // TODO add more
             )
   }
@@ -81,6 +149,10 @@ class EndToEndTestExtension :
   ): Any? {
     return when (parameterContext.parameter.type) {
       Config::class.java -> parameters.config(extensionContext)
+      SnsClient::class.java -> parameters.snsClient(extensionContext)
+      SqsClient::class.java -> parameters.sqsClient(extensionContext)
+      QueueWithDlq::class.java -> parameters.ordersQueue(extensionContext)
+      TopicWithQueue::class.java -> parameters.orderEventsTopic(extensionContext)
       // TODO add more
       else -> null
     }
@@ -92,6 +164,17 @@ class EndToEndTestExtension :
         fun config(extensionContext: ExtensionContext): Config =
             getObjectFromStore(extensionContext, config).copy()
 
+        fun sqsClient(extensionContext: ExtensionContext): SqsClient =
+            getObjectFromStore(extensionContext, sqsClient)
+
+        fun snsClient(extensionContext: ExtensionContext): SnsClient =
+            getObjectFromStore(extensionContext, snsClient)
+
+        fun ordersQueue(extensionContext: ExtensionContext): QueueWithDlq =
+            getObjectFromStore(extensionContext, ordersQueue)
+
+        fun orderEventsTopic(extensionContext: ExtensionContext): TopicWithQueue =
+            getObjectFromStore(extensionContext, orderEventsTopic)
         // TODO add more
       }
 

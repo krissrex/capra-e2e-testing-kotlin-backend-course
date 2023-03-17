@@ -1,25 +1,33 @@
 package no.liflig.bartenderservice
 
+import io.restassured.RestAssured
+import no.liflig.bartenderservice.common.config.Config
 import no.liflig.snapshot.verifyJsonSnapshot
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import test.util.Integration
 
+@ExtendWith(EndToEndTestExtension::class)
 class ApiEndToEndTest {
   @Integration
   @Test
-  fun `should return a thing from api`() {
+  fun `should return a thing from api`(config: Config) {
     // Given
-    // TODO start the app
+
+    App(config).start()
 
     // When
-    // TODO invoke API
+    val responseBody =
+        RestAssured.`when`()
+            .get("/api/v1/menu")
+            .then()
+            .statusCode(200)
+            .log()
+            .ifError()
+            .extract()
+            .asPrettyString()
 
     // Then
-    Assertions.assertThat("x").isEqualTo("x")
-
-    verifyJsonSnapshot("example/api-response.json", """{"response": "ok"}""")
-
-    TODO("Not yet implemented")
+    verifyJsonSnapshot("example/api-response.json", responseBody)
   }
 }

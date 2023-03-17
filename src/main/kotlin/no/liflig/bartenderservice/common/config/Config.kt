@@ -11,9 +11,9 @@ data class Config(
     val applicationName: String,
     val serverPort: Int,
     val buildInfo: BuildInfo,
-    val database: DbConfig,
+    var database: DbConfig,
     val queuePollerEnabled: Boolean,
-    val awsConfig: AwsConfig,
+    var awsConfig: AwsConfig,
     val paymentProviderUrl: String
 ) {
 

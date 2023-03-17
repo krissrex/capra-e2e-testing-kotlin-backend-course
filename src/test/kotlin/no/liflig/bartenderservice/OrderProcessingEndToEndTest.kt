@@ -1,33 +1,72 @@
 package no.liflig.bartenderservice
 
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import java.util.concurrent.TimeUnit
 import mu.KotlinLogging
+import no.liflig.bartenderservice.common.config.Config
 import no.liflig.snapshot.verifyJsonSnapshot
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.testcontainers.shaded.org.awaitility.Awaitility
 import software.amazon.awssdk.services.sqs.SqsClient
 import test.util.Integration
+import test.util.QueueWithDlq
+import test.util.TopicWithQueue
 import test.util.loadTestFile
 
+@ExtendWith(EndToEndTestExtension::class)
 class OrderProcessingEndToEndTest {
 
   @Integration
   @Test
-  fun `should process an order from sqs, persist the order to database, and produce two progress events on sns`() {
+  fun `should process an order from sqs, persist the order to database, and produce two progress events on sns`(
+      config: Config,
+      sqsClient: SqsClient,
+      ordersQueue: QueueWithDlq,
+      orderEventsTopic: TopicWithQueue
+  ) {
     // Given
-    // TODO start the app
+    val myExternalApi: WireMockServer =
+        WireMockServer(WireMockConfiguration.wireMockConfig().port(6789))
+    myExternalApi.start()
 
-    val sqsClient = TODO()
-    val queueUrl = TODO()
+    myExternalApi.stubFor(
+        WireMock.post("/api/payments")
+            .willReturn(WireMock.status(200).withBody("paid successfully")))
+
+    App(config.copy(paymentProviderUrl = myExternalApi.baseUrl() + "/api/payments")).start()
+
+    val queueUrl = ordersQueue.queueUrl
+
     // When
-    // TODO send a message to the queue
-
     TestFiles.T1.send(sqsClient, queueUrl)
-    TestFiles.T2.send(sqsClient, queueUrl)
+
+    Awaitility.await().atMost(10, TimeUnit.SECONDS).untilAsserted {
+      val availableMessages = orderEventsTopic.messageCount(sqsClient)
+      assertThat(availableMessages).isEqualTo(2)
+    }
+
+    val messages = orderEventsTopic.getMessages(sqsClient)
+    assertThat(messages.map { it.body() })
+        .containsAll(
+            listOf(
+                """{"orderId":"1","at":"2023-03-15T20:06:26.645754Z"}""",
+                """{"orderId":"1","at":"2023-03-15T20:06:29.693910Z"}"""))
+
+    myExternalApi.verify(
+        WireMock.postRequestedFor(WireMock.urlPathEqualTo("/api/payments"))
+            .withRequestBody(
+                WireMock.equalToJson("""{ "cardNumber": "123-1234-123-456", "price": "218"}""")))
+
+    /*    TestFiles.T2.send(sqsClient, queueUrl)
     TestFiles.T3.send(sqsClient, queueUrl)
     TestFiles.T4.send(sqsClient, queueUrl)
     TestFiles.T5.send(sqsClient, queueUrl)
     TestFiles.T6.send(sqsClient, queueUrl)
-    TestFiles.T7.send(sqsClient, queueUrl)
+    TestFiles.T7.send(sqsClient, queueUrl)*/
 
     // Then
     // TODO await a message out from SNS
@@ -38,7 +77,7 @@ class OrderProcessingEndToEndTest {
 
     verifyJsonSnapshot("example/sns-message.json", """{"message": "hello world"}""")
 
-    TODO("Not yet implemented")
+    Thread.sleep(10000)
   }
 }
 

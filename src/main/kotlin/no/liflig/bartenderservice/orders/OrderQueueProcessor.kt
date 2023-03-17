@@ -28,12 +28,12 @@ class OrderQueueProcessor(
         return
       }
 
-      val paymentDeviation =
+      /*val paymentDeviation =
           paymentService.collectPayment(order.paymentInfo.cardNumber, order.totalPrice)
       if (paymentDeviation != null) {
         log.warn { "Failed to collect payment: $paymentDeviation" }
         throw RuntimeException("Failed to collect payment: $paymentDeviation")
-      }
+      }*/
 
       val orderCreationDeviation = orderRepository.createOrder(order)
       if (orderCreationDeviation != null) {

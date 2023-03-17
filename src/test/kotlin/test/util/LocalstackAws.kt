@@ -1,5 +1,4 @@
 package test.util
-// Rename extension to `.kt` after adding Localstack dependency in pom.
 
 import org.testcontainers.containers.localstack.LocalStackContainer
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials

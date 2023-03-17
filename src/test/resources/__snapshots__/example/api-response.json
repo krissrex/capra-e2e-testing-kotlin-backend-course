@@ -1,3 +1,39 @@
 {
-  "response": "ok"
+  "drinks": [
+    {
+      "id": "1",
+      "name": "Hansa",
+      "price": "98",
+      "size": "0.6",
+      "ageLimit": "EIGHTEEN"
+    },
+    {
+      "id": "2",
+      "name": "Dahls",
+      "price": "65",
+      "size": "0.5",
+      "ageLimit": "EIGHTEEN"
+    },
+    {
+      "id": "3",
+      "name": "Liflig-pils",
+      "price": "20",
+      "size": "0.5",
+      "ageLimit": "EIGHTEEN"
+    },
+    {
+      "id": "4",
+      "name": "Hakkespett",
+      "price": "120",
+      "size": "0.4",
+      "ageLimit": "TWENTY"
+    },
+    {
+      "id": "5",
+      "name": "Munkholm",
+      "price": "40",
+      "size": "0.5",
+      "ageLimit": "NONE"
+    }
+  ]
 }
