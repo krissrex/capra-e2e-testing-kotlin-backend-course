@@ -9,7 +9,7 @@ import software.amazon.awssdk.services.sqs.SqsClient
 
 fun createSqsClient(localstackContainer: LocalStackContainer): SqsClient {
   return SqsClient.builder()
-      .endpointOverride(localstackContainer.getEndpointOverride(LocalStackContainer.Service.SNS))
+      .endpointOverride(localstackContainer.getEndpointOverride(LocalStackContainer.Service.SQS))
       .credentialsProvider(
           StaticCredentialsProvider.create(
               AwsBasicCredentials.create(
