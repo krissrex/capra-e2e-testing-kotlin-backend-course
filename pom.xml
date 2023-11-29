@@ -28,7 +28,7 @@
     <kotlinx-serialization.version>1.4.1</kotlinx-serialization.version>
     <kotlin-logging.version>3.0.4</kotlin-logging.version>
     <slf4j.version>2.0.6</slf4j.version>
-    <logback-classic.version>1.4.5</logback-classic.version>
+    <logback-classic.version>1.4.12</logback-classic.version>
     <aws-sdk.version>2.19.14</aws-sdk.version>
     <jdbi.version>3.37.1</jdbi.version>
     <HikariCP.version>5.0.1</HikariCP.version>
