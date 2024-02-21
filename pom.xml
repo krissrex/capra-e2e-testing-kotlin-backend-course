@@ -32,7 +32,7 @@
     <aws-sdk.version>2.19.14</aws-sdk.version>
     <jdbi.version>3.37.1</jdbi.version>
     <HikariCP.version>5.0.1</HikariCP.version>
-    <postgresql.version>42.5.4</postgresql.version>
+    <postgresql.version>42.7.2</postgresql.version>
     <flyway.version>9.15.1</flyway.version>
 
     <!-- Testing -->
